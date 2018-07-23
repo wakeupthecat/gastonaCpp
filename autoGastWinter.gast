@@ -1,0 +1,62 @@
+#javaj#
+
+   <frames>  main, gasWinter.gast
+
+   <layout of main>
+      EVALAYOUT, 10, 10, 5, 5
+       zzz,   200   ,   X
+          , bSabroson, ePasoto
+          , lLabello, tAmbrosia
+       X  , iRogelia, +
+       X  ,   +     , xTexto
+      200 , partit, -
+
+
+   <layout of partit>
+         EVA, 4, 4, 3, 3
+
+          ,  X
+       X  ,  aSalo
+
+
+#data#
+
+   <xTexto>
+      //Esto, en teoria, es una text area
+      //que tiene dos lineas
+      //
+
+   <lLabello> LABEL DE PROVA
+
+   <!   <tAmbrosia visibleColumns> name, description
+   <tAmbrosia>
+    "#(99)", Id, name, date, description
+    " 5",7712, Ricahardo, 2013.02.22, //Mano de obra barata donde la haya
+    " 6",1154, Lisabondia, 1980.01.10, //Se va a la antártida, ya veremos...
+    44,7781, Umbramerta, 1992.02.22, //Se matricula
+
+#luaix#
+
+   <main0>
+      //print "here we are LUAIX!"
+
+   <main>
+      //print "estaunlich LUIX!!!"
+
+   <-- bSabroson>
+      //print "HEI Botoás!"
+
+   <-- ePasoto>
+      //function factorial(n)
+      //   if n == 0 then
+      //      return 1
+      //   else
+      //      return n * factorial(n - 1)
+      //   end
+      //end
+      //
+      // print "Calculation of 5!"
+      // print (factorial(5))
+      // print "Yatans!"
+
+#**FI#

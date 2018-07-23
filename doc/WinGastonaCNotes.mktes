@@ -1,0 +1,85 @@
+#h GastonaC Notes for Windows
+
+--- Status : Proof of concept Win
+
+Proof of concept that compiles, links and executes for Windows using gcc
+
+This includes
+
+   - Basic zWidgets : 
+         zLabel, 
+         zButton, 
+         zCheckBox, 
+         zGroupBox, 
+         zRadioButton, 
+         zEditField,
+         zTable (list and table)
+         zTextArea
+         
+   - javaj : instanciation and layout including layout composition
+   
+   - initialization of sqliteCommand object capable of any sqlite operation
+   
+   - initialization of listix handling the logic using lua
+         unit luaix
+         autorun "main0"
+         run "main" when frames are rendered
+         react to all mensaka messages declared (variables <-- msg>)
+
+
+--- Next steps
+
+---- Javaj
+
+Improve, add and test zWidgets
+
+---- Sqlite
+
+Simpler interface with sqlite, for instance
+
+      vector<string> errors = sqliteExecute (database, script or file or memory file);
+      
+      EvaUnit out = sqliteSelect (database, script or file or memory file);
+
+Generic sqliteSelectWindow to handle automatically scrolling
+
+Add generic data model (evatable or sqlSelect) to all widgets that need it
+
+---- Lua
+
+Detect exceptions for syntax errors and or execution errors
+
+Develope gastona specific lua functions (acces data etc)
+
+
+--- Compilation
+
+Compilation for sqlite, simple gcc of the modified shellmain.c and the original sqlite.c. Put the o files in 
+the directory outwin
+
+      echo ========== Compiling sqlite ...
+      cd sqlite
+      gcc -c -o ../outwin/shellmain.o shellmain.c
+      gcc -c -o ../outwin/sqlite3.o sqlite3.c 
+      cd ..
+
+Compilation for lua, simple gcc of all lua c files and archive a librery (liblua.a) in 
+the directory outwin
+
+      echo ========== Compiling lua ...
+      cd lua-5.3.4\src
+      gcc -c -std=gnu99 -O2 -Wall -Wextra -DLUA_COMPAT_5_2 lapi.c lcode.c lctype.c ldebug.c ldo.c ldump.c lfunc.c lgc.c llex.c lmem.c lobject.c lopcodes.c lparser.c lstate.c lstring.c ltable.c ltm.c lundump.c lvm.c lzio.c
+      gcc -c -std=gnu99 -O2 -Wall -Wextra -DLUA_COMPAT_5_2 lauxlib.c lbaselib.c lbitlib.c lcorolib.c ldblib.c liolib.c lmathlib.c loslib.c lstrlib.c ltablib.c lutf8lib.c loadlib.c linit.c
+      ar rcs ../../outwin/liblua.a  lapi.o lcode.o lctype.o ldebug.o ldo.o ldump.o lfunc.o lgc.o llex.o lmem.o lobject.o lopcodes.o lparser.o lstate.o lstring.o ltable.o ltm.o lundump.o lvm.o lzio.o lauxlib.o lbaselib.o lbitlib.o lcorolib.o ldblib.o liolib.o lmathlib.o loslib.o lstrlib.o ltablib.o lutf8lib.o loadlib.o linit.o
+      del *.o
+      cd ..\..
+
+Then compile gastonaC 
+
+      - setting all possible header sources base, win, sqlite etc 
+      - includers of sqlite or lua has to declare extern "C" before since these libraries are C
+      - link the C objects always after the main c and at the end the linker directive!
+
+      
+      g++ -std=c++11 -fpermissive -static -Ibase -Iwin -Ilua-5.3.4\src -o outwin\gastonaW.exe win/winMainGast.cpp outwin\liblua.a outwin\shellmain.o outwin\sqlite3.o -l gdi32
+      

@@ -1,0 +1,83 @@
+#h Build and other GTK issues
+
+
+-- Compile command
+
+We need in the gcc command :
+
+Our stuff
+
+      -std=c++11 -Ibase -Igtk -Ilua-5.3.4/src -o outgtk/gastonaGtk base/EvaLayoutManager.cpp gtk/mainGtk.cpp outgtk/liblua.a outgtk/shellmain.o outgtk/sqlite3.o
+
+Configuration gtk+2.0
+
+      -pthread -I/usr/include/gtk-2.0 -I/usr/lib/x86_64-linux-gnu/gtk-2.0/include -I/usr/include/gio-unix-2.0/ -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/libpng12 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/libpng12 -I/usr/include/pango-1.0 -I/usr/include/harfbuzz -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/freetype2 -lgtk-x11-2.0 -lgdk-x11-2.0 -lpangocairo-1.0 -latk-1.0 -lcairo -lgdk_pixbuf-2.0 -lgio-2.0 -lpangoft2-1.0 -lpango-1.0 -lgobject-2.0 -lglib-2.0 -lfontconfig -lfreetype
+
+Extra libraries
+
+      -lstdc++ -lm -ldl
+
+
+--- NOTE: -ldl is needed to avoid
+
+   sqlite3.o: undefined reference to symbol 'dlclose@@GLIBC_2.2.5'
+
+--- NOTE: don't use -static due to
+
+      compiling ...
+      gcc -std=c++11 -static -Ibase -Igtk -Ilua-5.3.4/src -o outgtk/gastonaGtk gtk/mainGtk.cpp outgtk/liblua.a outgtk/shellmain.o outgtk/sqlite3.o -pthread -I/usr/include/gtk-2.0 -I/usr/lib/x86_64-linux-gnu/gtk-2.0/include -I/usr/include/gio-unix-2.0/ -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/libpng12 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/libpng12 -I/usr/include/pango-1.0 -I/usr/include/harfbuzz -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/freetype2 -lgtk-x11-2.0 -lgdk-x11-2.0 -lpangocairo-1.0 -latk-1.0 -lcairo -lgdk_pixbuf-2.0 -lgio-2.0 -lpangoft2-1.0 -lpango-1.0 -lgobject-2.0 -lglib-2.0 -lfontconfig -lfreetype -lstdc++ -lm -ldl
+      /usr/bin/ld: cannot find -latk-1.0
+      /usr/bin/ld: cannot find -lgdk_pixbuf-2.0
+      outgtk/sqlite3.o: In function `unixDlOpen':
+      sqlite3.c:(.text+0x10d66): warning: Using 'dlopen' in statically linked applications requires at runtime the shared libraries from the glibc version used for linking
+      outgtk/liblua.a(loslib.o): In function `os_tmpname':
+      loslib.c:(.text+0x29c): warning: the use of `tmpnam' is dangerous, better use `mkstemp'
+      /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/libgio-2.0.a(libgio_2_0_la-glocalfileinfo.o): In function `lookup_gid_name':
+      (.text+0x11d7): warning: Using 'getgrgid_r' in statically linked applications requires at runtime the shared libraries from the glibc version used for linking
+      /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/libgio-2.0.a(libgio_2_0_la-glocalvfs.o): In function `g_local_vfs_parse_name':
+      (.text+0x1cd): warning: Using 'getpwnam' in statically linked applications requires at runtime the shared libraries from the glibc version used for linking
+      outgtk/shellmain.o: In function `find_home_dir':
+      shellmain.c:(.text+0x1cd78): warning: Using 'getpwuid' in statically linked applications requires at runtime the shared libraries from the glibc version used for linking
+      /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/libglib-2.0.a(libglib_2_0_la-gutils.o): In function `g_get_user_database_entry':
+      (.text+0xcf): warning: Using 'getpwnam_r' in statically linked applications requires at runtime the shared libraries from the glibc version used for linking
+      /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/libgio-2.0.a(libgio_2_0_la-glocalfileinfo.o): In function `lookup_uid_data':
+      (.text+0x1054): warning: Using 'getpwuid_r' in statically linked applications requires at runtime the shared libraries from the glibc version used for linking
+      /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/libgio-2.0.a(libgio_2_0_la-ginetsocketaddress.o): In function `g_inet_socket_address_new_from_string':
+      (.text+0x850): warning: Using 'getaddrinfo' in statically linked applications requires at runtime the shared libraries from the glibc version used for linking
+      /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/libgio-2.0.a(libgio_2_0_la-gnetworkaddress.o): In function `g_network_address_parse':
+      (.text+0xc39): warning: Using 'getservbyname' in statically linked applications requires at runtime the shared libraries from the glibc version used for linking
+      /usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/libgio-2.0.a(libgio_2_0_la-gnetworkaddress.o): In function `g_network_address_parse':
+      (.text+0xc4e): warning: Using 'endservent' in statically linked applications requires at runtime the shared libraries from the glibc version used for linking
+      collect2: error: ld returned 1 exit status
+
+
+
+-- A very bizarre error (SOLVED)
+
+         CRITICAL **: murrine_style_draw_focus: assertion 'width >= -1' failed
+
+
+Currently the program is working for some resizes until the error comes
+
+
+--- CAUSE
+
+A visible gtk widget has invalid size attributes (e.g. width)
+
+--- SOLUTION
+
+Fixed by checking the dimension attributes of the gtk widget in the only place
+where we position de actual widgets, in zWidgetLayable::doShowAt
+
+         if (x >= 0 && y >= 0 && dx > 0 && dy > 0)
+         {
+            gtk_fixed_move ...
+            gtk_widget_set_size_request ...
+            gtk_widget_show (nativeWidgetHandle);
+         }
+         else {
+            // very important! hide widget to avoid
+            // the bizarre exception : "CRITICAL **: murrine_style_draw_focus: assertion 'width >= -1' failed"
+            gtk_widget_hide (nativeWidgetHandle);
+         }
+

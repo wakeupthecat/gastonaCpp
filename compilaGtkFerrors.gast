@@ -1,0 +1,106 @@
+#!/usr/bin/gastona
+
+#javaj#
+
+   <frames> main, gastoba Gtk Ferrors, 600
+
+   <layout of main>
+
+      EVA, 10, 10, 5, 5
+      , X
+      , eDetailLog
+      , bCompile
+      , lErrors
+    X , iErrors
+      , lWarnings
+    X , iWarnings
+    X , oConsolar
+
+#data#
+
+   <GTK2CONF> //gtk+-2.0
+
+   <GCC_OPTIONS> //-std=c++11 -Ibase -Igtk -Ilua-5.3.4/src
+   <LM_OPTIONS>  //-lstdc++ -lm -ldl
+   <LIB_OBJS> outgtk/liblua.a outgtk/shellmain.o outgtk/sqlite3.o
+
+   <OUT_BIN> outgtk/gastonaGtk
+
+   <eDetailLog> outgtk/Ferrors.txt
+
+   <LOGFILE>  @<eDetailLog>
+
+#listix#
+
+   <main>
+      DB CONFIG, DEFAULT, outgtk/derrors.db
+
+   <COMP_LINE>
+      //gcc @<GCC_OPTIONS> -o @<OUT_BIN> base/EvaLayoutManager.cpp gtk/mainGtk.cpp @<LIB_OBJS> @<:infile outgtk/gtkOptions> @<LM_OPTIONS>
+
+   <-- bCompile>
+       -->, oConsolar clear
+       LSX, DELOLD
+
+       <! ---- create gtk configuration
+       CALL, //pkg-config --libs --cflags @<GTK2CONF> > outgtk/gtkOptions
+           , BATCH, 1
+
+       GEN, genCompGtk.sh, COMP_LINE
+       //compiling ...
+       //@<COMP_LINE>
+       //
+       CALL, //@<COMP_LINE>
+       //
+       CHECK, FILE, @<OUT_BIN>
+       //runing ...
+       LAUNCH, //@<OUT_BIN>
+
+   <DELOLD>
+       CHECK, FILE, @<OUT_BIN>
+       CALL, //rm @<OUT_BIN>
+
+
+   <-- bRescan>
+      -->, oConsolar clear
+      LSX, parseErrors
+      -->, iErrors data!, sqlSelect,   //SELECT fileName, line, lineNr AS lineAbs FROM msgErr
+      -->, iWarnings data!, sqlSelect, //SELECT fileName, line, lineNr AS lineAbs FROM msgWarn
+
+  <FILENAME_LINE_PATT_mingw> //^([^:]*):([^:]*):([^:]*):
+
+  <parseErrors>
+      CHECK, FILE, @<LOGFILE>, BOX, I, File @<LOGFILE> not found!
+      PARSONS, FILE2DB, @<LOGFILE>
+             , CLEAN, 1
+             , TABLE, msgErr
+             ,      , fileName, line, col, text, //@<FILENAME_LINE_PATT_mingw> fatal error: (.*)
+             , TABLE, msgErr
+             ,      , fileName, line, col, text, //@<FILENAME_LINE_PATT_mingw> error: (.*)
+
+   <ERR!>
+      //@<p1>
+      //
+
+   <gotoline(file line)>
+      CHECK, FILE, @<p1>, LSX, ERR!, //FILE @<p1> not found ...
+      CHECK, VAR, launch edit(file line), LISTIX, run StdEE.edit(file line), @<p1>, @<p2>
+      LSX, launch edit(file line), @<p1>, @<p2>
+
+   <-- iErrors>
+      CHECK, VAR, iErrors selected.fileName
+      LSX, gotoline(file line), @<iErrors selected.fileName>, @<iErrors selected.line>
+
+   <-- iWarnings>
+      CHECK, VAR, iWarnings selected.fileName
+      LSX, gotoline(file line), @<iWarnings selected.fileName>, @<iWarnings selected.line>
+
+   <-- iErrors 2>
+      CHECK, VAR, iErrors selected.fileName
+      LSX, gotoline(file line), @<LOGFILE>, @<iErrors selected.lineAbs>
+
+   <-- iWarnings>
+      CHECK, VAR, iWarnings selected.fileName
+      LSX, gotoline(file line), @<LOGFILE>, @<iWarnings selected.lineAbs>
+
+#**#

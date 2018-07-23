@@ -1,0 +1,88 @@
+#javaj#
+
+   <frames> main, Ferrors, 600
+
+   <layout of main>
+      EVA, 10, 10, 5, 5
+
+      , X
+      , eDetailLog, -
+      , bRescan, bCompile
+      , lErrors,-
+    X , iErrors,-
+      , lWarnings,-
+    X , iWarnings,-
+    X , oConsolar,-
+
+
+#data#
+
+   <eDetailLog> outwin\Ferrors.txt
+
+   <LOGFILE>  @<eDetailLog>
+
+#listix#
+
+   <-- bCompile>
+      CALL, //CMD /C compilaWin.bat > @<eDetailLog>
+          , ON BATCH, 1
+
+   <main>
+      DB CONFIG, DEFAULT, outwin\derrors.db
+      LOAD, data, @<:sys user.home>/.gastonaLocal
+
+   <-- bRescan>
+      -->, oConsolar clear
+      LSX, parseErrors
+      -->, iErrors data!, sqlSelect,   //SELECT fileName, line, lineNr AS lineAbs FROM msgErr
+      -->, iWarnings data!, sqlSelect, //SELECT fileName, line, lineNr AS lineAbs FROM msgWarn
+
+  <FILENAME_LINE_PATT_mingw> //^([^:]*):([^:]*):([^:]*):
+
+
+  <parseErrors>
+      CHECK, FILE, @<LOGFILE>, BOX, I, File @<LOGFILE> not found!
+      PARSONS, FILE2DB, @<LOGFILE>
+             , CLEAN, 1
+             , TABLE, msgErr
+             ,      , fileName, line, col, text, //@<FILENAME_LINE_PATT_mingw> fatal error: (.*)
+             , TABLE, msgErr
+             ,      , fileName, line, col, text, //@<FILENAME_LINE_PATT_mingw> error: (.*)
+
+<kk>
+celta\evaLayoutV5\Eva.h:177:52: error: 'class EvaLine' has no member named 'size'
+
+
+             , TABLE, msgWarn
+             ,      , fileName, line, col, text, //@<FILENAME_LINE_PATT_mingw> warning: (.*)
+             , TABLE, msgErr
+             ,      , fileName, line, col, text, //@<FILENAME_LINE_PATT_mingw> cannot resolve symbol(.*)
+
+             , TABLE, msgErr
+             ,      , fileName, line, col, text, //@<FILENAME_LINE_PATT_mingw> undefined reference(.*)
+
+   <ERR!>
+      //@<p1>
+      //
+
+   <gotoline(file line)>
+      CHECK, FILE, @<p1>, LSX, ERR!, //FILE @<p1> not found ...
+      CHECK, VAR, launch edit(file line), LISTIX, run StdEE.edit(file line), @<p1>, @<p2>
+      LSX, launch edit(file line), @<p1>, @<p2>
+
+   <-- iErrors>
+      CHECK, VAR, iErrors selected.fileName
+      LSX, gotoline(file line), @<iErrors selected.fileName>, @<iErrors selected.line>
+
+   <-- iWarnings>
+      CHECK, VAR, iWarnings selected.fileName
+      LSX, gotoline(file line), @<iWarnings selected.fileName>, @<iWarnings selected.line>
+
+   <-- iErrors 2>
+      CHECK, VAR, iErrors selected.fileName
+      LSX, gotoline(file line), @<LOGFILE>, @<iErrors selected.lineAbs>
+
+   <-- iWarnings>
+      CHECK, VAR, iWarnings selected.fileName
+      LSX, gotoline(file line), @<LOGFILE>, @<iWarnings selected.lineAbs>
+#**#

@@ -1,0 +1,80 @@
+#h GastonaC Notes for Gtk
+
+--- Status : Proof of concept Gtk
+
+Proof of concept that compiles, links and executes for Linus using gtk+2.0 and gcc
+
+This includes
+
+   - Basic zWidgets : 
+         zButton
+         
+   - javaj : instanciation and layout including layout composition
+   
+   - initialization of sqliteCommand object capable of any sqlite operation
+   
+   - initialization of listix handling the logic using lua
+         unit luaix
+         autorun "main0"
+         run "main" when frames are rendered
+         react to all mensaka messages declared (variables <-- msg>)
+
+--- Next steps
+
+---- Javaj
+
+Add much more zWidgets, actually using gtk it is a quite straighforward task!
+
+---- Sqlite & Lua
+
+Same todos as with GatonaC in Windows since they are base features.
+
+--- Compilation
+
+Very similar to GastonaC for windows but using the output directory ../outgtk instead
+
+Compilation for sqlite, simple gcc of the modified shellmain.c and the original sqlite.c. Put the o files in 
+the directory outgtk
+
+      echo ========== Compiling sqlite ...
+      cd sqlite
+      gcc -c -o ../outgtk/shellmain.o shellmain.c
+      gcc -c -o ../outgtk/sqlite3.o sqlite3.c 
+      cd ..
+
+Compilation for lua, simple gcc of all lua c files and archive a librery (liblua.a) in 
+the directory outgtk
+
+      echo ========== Compiling lua ...
+      cd lua-5.3.4/src
+      gcc -c -std=gnu99 -O2 -Wall -Wextra -DLUA_COMPAT_5_2 lapi.c lcode.c lctype.c ldebug.c ldo.c ldump.c lfunc.c lgc.c llex.c lmem.c lobject.c lopcodes.c lparser.c lstate.c lstring.c ltable.c ltm.c lundump.c lvm.c lzio.c
+      gcc -c -std=gnu99 -O2 -Wall -Wextra -DLUA_COMPAT_5_2 lauxlib.c lbaselib.c lbitlib.c lcorolib.c ldblib.c liolib.c lmathlib.c loslib.c lstrlib.c ltablib.c lutf8lib.c loadlib.c linit.c
+      ar rcs ../../outgtk/liblua.a  lapi.o lcode.o lctype.o ldebug.o ldo.o ldump.o lfunc.o lgc.o llex.o lmem.o lobject.o lopcodes.o lparser.o lstate.o lstring.o ltable.o ltm.o lundump.o lvm.o lzio.o lauxlib.o lbaselib.o lbitlib.o lcorolib.o ldblib.o liolib.o lmathlib.o loslib.o lstrlib.o ltablib.o lutf8lib.o loadlib.o linit.o
+      del *.o
+      cd ../..
+
+Then compile gastonaC 
+
+
+We need in the gcc command :
+
+Our stuff
+
+      -std=c++11 -Ibase -Igtk -Ilua-5.3.4/src -o outgtk/gastonaGtk base/EvaLayoutManager.cpp gtk/mainGtk.cpp outgtk/liblua.a outgtk/shellmain.o outgtk/sqlite3.o
+
+Configuration gtk+2.0
+
+      -pthread -I/usr/include/gtk-2.0 -I/usr/lib/x86_64-linux-gnu/gtk-2.0/include -I/usr/include/gio-unix-2.0/ -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/libpng12 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/libpng12 -I/usr/include/pango-1.0 -I/usr/include/harfbuzz -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/freetype2 -lgtk-x11-2.0 -lgdk-x11-2.0 -lpangocairo-1.0 -latk-1.0 -lcairo -lgdk_pixbuf-2.0 -lgio-2.0 -lpangoft2-1.0 -lpango-1.0 -lgobject-2.0 -lglib-2.0 -lfontconfig -lfreetype
+
+Extra libraries
+
+      -lstdc++ -lm -ldl
+
+
+      - setting all possible header sources base, win, sqlite etc 
+      - includers of sqlite or lua has to declare extern "C" before since these libraries are C
+      - link the C objects always after the main c and at the end the linker directive!
+
+      
+      g++ -std=c++11 -fpermissive -static -Ibase -Iwin -Ilua-5.3.4/src -o outwin\gastonaW.exe win/winMainGast.cpp outwin\liblua.a outwin\shellmain.o outwin\sqlite3.o -l gdi32
+      

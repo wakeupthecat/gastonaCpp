@@ -1,0 +1,107 @@
+#h Notes acerca de GTK
+
+--- Posicionamiento fijo, como funciona "fixed"
+
+Usar correctamente el fixed
+
+crear main frame 
+
+        GtkWidget *window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+
+crear fixed
+
+        GtkWidget *fixed = gtk_fixed_new();
+
+meter fixed en main frame (ojo! en frame ya no cabe nada más!)
+
+        gtk_container_add(GTK_CONTAINER(window), fixed);
+
+crear subcomponent 1,2 etc and put all them into the fix
+
+        GtkWidget * btn1 = gtk_button_new_with_label("Button");
+        gtk_fixed_put(GTK_FIXED(fixed), btn1, 150, 50);
+        
+every time we want a subcomponent to be drawn ...
+
+         gtk_fixed_move(GTK_FIXED(fixed), btn1, 150, 50); // with x, y appropiated
+         gtk_widget_set_size_request(btn1, 80, 30); // with dx, dy appropiated
+
+--- Cores and gdb
+
+We can force all GTK Warnings to become fata error and thus being able to have a back trace
+to know the exact point of failure
+
+We need a environment variable to tell the GTK library to do so
+
+      export G_DEBUG=fatal-warnings
+
+then we compile the binary (e.g. name exan)
+
+      gcc sorzo.cpp -o cache/exan -lm -I gastonagtk -I gastonagtk/eva -std=c++11 -lstdc++ -pthread -I/usr/include/gtk-2.0 -I/usr/lib/x86_64-linux-gnu/gtk-2.0/include -I/usr/include/gio-unix-2.0/ -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/libpng12 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/libpng12 -I/usr/include/pango-1.0 -I/usr/include/harfbuzz -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/freetype2 -lgtk-x11-2.0 -lgdk-x11-2.0 -lpangocairo-1.0 -latk-1.0 -lcairo -lgdk_pixbuf-2.0 -lgio-2.0 -lpangoft2-1.0 -lpango-1.0 -lgobject-2.0 -lglib-2.0 -lfontconfig -lfreetype
+
+if we call exan and we fall into the "fatal error" it will dump a core file
+
+Where is this core file ? I don't know !!
+
+so we call dbg with the special binary and to have the same argument order we use --args
+
+
+      gdb --args exan mina.gast
+      
+then 
+
+      run
+      
+and then when the error occurs
+
+      bt
+      
+
+
+--- source ejemplo
+
+      // http://zetcode.com/gui/gtk2/gtklayoutmanagement/
+      // gtk+-2
+      // gtk+-3
+
+      #include <gtk/gtk.h>
+
+      int main(int argc, char *argv[]) {
+          
+        GtkWidget *window;
+        GtkWidget *fixed;
+
+        GtkWidget *btn1;
+        GtkWidget *btn2;
+        GtkWidget *btn3;
+
+        gtk_init(&argc, &argv);
+
+        window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+        gtk_window_set_title(GTK_WINDOW(window), "GtkFixed");
+        gtk_window_set_default_size(GTK_WINDOW(window), 300, 200);
+        gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
+
+        fixed = gtk_fixed_new();
+        gtk_container_add(GTK_CONTAINER(window), fixed);
+
+        btn1 = gtk_button_new_with_label("Button");
+        gtk_fixed_put(GTK_FIXED(fixed), btn1, 150, 50);
+        gtk_widget_set_size_request(btn1, 80, 30);
+
+        btn2 = gtk_button_new_with_label("Button");
+        gtk_fixed_put(GTK_FIXED(fixed), btn2, 15, 15);
+        gtk_widget_set_size_request(btn2, 80, 30);
+
+        btn3 = gtk_button_new_with_label("Button");
+        gtk_fixed_put(GTK_FIXED(fixed), btn3, 100, 100);
+        gtk_widget_set_size_request(btn3, 80, 30);
+
+        g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_main_quit), NULL);
+
+        gtk_widget_show_all(window);
+
+        gtk_main();
+
+        return 0;
+      }
