@@ -10,10 +10,11 @@
 #include "gastonaCBase.h"
 // #include "zTable.h"
 // #include "zTree.h"
-// #include "zLabel.h"
+#include "zLabel.h"
 #include "zButton.h"
+#include "zList.h"
 // #include "zRadioButton.h"
-// #include "zCheckBox.h"
+#include "zCheckBox.h"
 // #include "zGroupBox.h"
 //
 // #include "zEditField.h"
@@ -102,8 +103,10 @@ public:
          {
             //case 'a': wiObj = new zTree (hwnd, winam); break;
             //case 'l': wiObj = new zLabel (hwnd, winam); break;
+            case 'l': wiObj = new zLabel (frame, winam); break;
             case 'b': wiObj = new zButton (frame, winam); break;
-            //case 'k': wiObj = new zCheckBox (hwnd, winam); break;
+            case 'k': wiObj = new zCheckBox (frame, winam); break;
+            case 'i': wiObj = new zList (frame, winam); break;
             //case 'g': wiObj = new zGroupBox (hwnd, winam); break;
             //case 'r': wiObj = new zRadioButton (hwnd, winam); break;
             //case 'e': wiObj = new zEditField (hwnd, winam); break;

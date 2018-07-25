@@ -1,3 +1,4 @@
+mkdir outgtk
 cd sqlite
 gcc -c -o ../outgtk/shellmain.o shellmain.c
 gcc -c -o ../outgtk/sqlite3.o sqlite3.c

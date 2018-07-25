@@ -1,0 +1,43 @@
+#javaj#
+
+   <frames>  main, gasWinter.gast
+
+   <layout of main>
+      EVALAYOUT, 10, 10, 5, 5
+       zzz,   200   ,   X
+          , bBatuno, iPasoto
+          , lLambrosio, +
+          , kCheckol, +
+        X ,         , +
+
+#data#
+
+   <iPasoto>
+       label, datos
+       Pasoto, 17236
+       Reordenos, 409832
+       Kanlos  , 12312
+   
+
+#luaix#
+
+   <-- bBatuno>
+      //print "HEI Batuno"
+
+   <-- kCheckol>
+      //print "Mes checkales ?"
+
+   <-- iPasoto>
+      //function factorial(n)
+      //   if n == 0 then
+      //      return 1
+      //   else
+      //      return n * factorial(n - 1)
+      //   end
+      //end
+      //
+      // print "Calculation of 5!"
+      // print (factorial(5))
+      // print "Yatans!"
+
+#**FI#
