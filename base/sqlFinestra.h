@@ -16,6 +16,11 @@ using namespace std;
 
 /*
 
+   sqlFinestra mainly handles a select with an
+   arbitrary big result by buffering and "windowing" the resultant table
+
+
+
 //========== test_sqlFinestra.cpp
 
 #include "sqlFinestra.h"
@@ -28,13 +33,14 @@ int main (int nn, char ** aa)
    sq.executeSQL ("CREATE TABLE IF NOT EXISTS prova (id, nom); DELETE FROM prova;");
    sq.executeSQL ("INSERT INTO prova VALUES (1, 'marla');"
                   "INSERT INTO prova VALUES (2, 'alea');"
-                  "INSERT INTO prova VALUES (6, 'marvin');"
-                  "INSERT INTO prova VALUES (7, 'abel');"
+                  "INSERT INTO prova VALUES (3, 'marvin');"
+                  "INSERT INTO prova VALUES (4, 'abel');"
                  );
 
-   sq.setSelectQuery ("SELECT * FROM prova");
+   sq.setSelectQuery ("SELECT * FROM prova ORDER BY nom");
    vector<string> cols = sq.getColumns ();
 
+   printf ("result %d columns x %ld records\n", cols.size (), sq.getCountRecords ());
    for (long cc = 0; cc < cols.size (); cc++)
       printf ("%s, ", cols[cc].c_str ());
    printf ("\n");
@@ -45,6 +51,15 @@ int main (int nn, char ** aa)
          printf ("%s, ", sq.getValue (rr, cc).c_str ());
       printf ("\n");
    }
+
+   printf ("Inverse order ...");
+   for (long rr = sq.getCountRecords (); rr > 0; rr --)
+   {
+      for (long cc = 0; cc < cols.size (); cc++)
+         printf ("%s, ", sq.getValue (rr, cc).c_str ());
+      printf ("\n");
+   }
+   printf ("fi\n");
 }
 
 */
@@ -56,11 +71,14 @@ class sqlFinestra
    public:
 
    enum {
-      MAX_CACHE_ROWS = 4, // for testing
+      DEFAULT_MAX_CACHE = 2048, // for testing
    };
 
-   sqlFinestra (const string & dbname = ""): openByMe (true)
+   sqlFinestra (const string & dbname = "", long cache_size = DEFAULT_MAX_CACHE):
+      MAX_CACHE_ROWS (max(1, cache_size)),
+      openByMe (true)
    {
+      init ();
       dbName = dbname.length () == 0 ? defaultDBName: dbname;
       if (sqlite3_open(dbName.c_str (), & db) == SQLITE_OK)
       {
@@ -72,9 +90,22 @@ class sqlFinestra
       }
    }
 
-   sqlFinestra (sqlite3 * dbopened): openByMe (false)
+   sqlFinestra (sqlite3 * dbopened, long cache_size = DEFAULT_MAX_CACHE):
+      MAX_CACHE_ROWS (max(1, cache_size)),
+      openByMe (false)
    {
+      init ();
       db = dbopened;
+   }
+
+   void init ()
+   {
+      defaultDBName = "defetuosa.db";
+      indxWriteBuffer = 0;
+
+      currentCursor = 0;
+      recordOffset = 0;
+      recordTotalCount = 0;
    }
 
    ~sqlFinestra ()
@@ -123,13 +154,19 @@ class sqlFinestra
    //
    const string & getCurrentValue (const string & colname)
    {
-      return dataBuffer[currentCursor][getIndexColumn (colname)];
+      return dataBuffer[currentDataIndx ()][getIndexColumn (colname)];
    }
 
    const string & getValue (long rowindx, int colindx)
    {
       setCurrentRecordIndex (rowindx);
-      return dataBuffer[currentCursor][colindx];
+      return dataBuffer[currentDataIndx () ][colindx];
+   }
+
+   // index of the dataBuffer where the current record (currentCursor) is found
+   long currentDataIndx ()
+   {
+      return 1 + currentCursor - recordOffset;
    }
 
    const string & getValue (long rowindx, const string & colname)
@@ -176,27 +213,42 @@ class sqlFinestra
          return true;
       }
 
+      bool first_setcursor = (recordTotalCount == -1); // total records is unknown
+
       // if the record is not present fetch a complete buffer
       // using a select ... LIMIT offset, size
       //
 
       // depending on the direction we want our recordNr to be the first or the last one
       // of the buffer.
-      long offsetFetch = recordNr > maxRecordNr () ? recordNr: recordNr - min(0, 1 + recordNr - MAX_CACHE_ROWS);
+      //    going forward   ==> recordNr first of the cache
+      //    going backwards ==> recordNr the last one of the cache so the next step backwards will be in the cache
+      //
+      long offsetFetch = recordNr > maxRecordNr () ?
+                         recordNr :
+                         max(1, min (recordNr, 1 + recordNr - MAX_CACHE_ROWS));
+
+      if (not first_setcursor)
+         TRACE (("requested record %ld not in range (%ld, %ld), set offsetFetch %ld", recordNr, minRecordNr (), maxRecordNr (), offsetFetch));
 
       std::stringstream sqlFetch;
-      sqlFetch << "select * from (" << sqlSelQuery << ") LIMIT " << offsetFetch << ", " << MAX_CACHE_ROWS;
+      sqlFetch << "select * from (" << sqlSelQuery << ") LIMIT " << (offsetFetch-1) << ", " << MAX_CACHE_ROWS;
 
       recordOffset = offsetFetch;
-      indxBuffer = 0;
+      indxWriteBuffer = 0;
       executeSQL (sqlFetch.str (), false);
+      TRACE (("\nrequested new fetch done, indxWriteBuffer %ld, recordOff %ld, range (%ld, %ld)\n",
+              indxWriteBuffer,
+              recordOffset,
+              minRecordNr (), maxRecordNr ()
+              ));
 
-      if (recordTotalCount == -1) // unkown
+      if (first_setcursor)
       {
          //assert (recordOffset == 1)
-         if (indxBuffer < MAX_CACHE_ROWS)
+         if (indxWriteBuffer < MAX_CACHE_ROWS)
          {
-            recordTotalCount = indxBuffer;
+            recordTotalCount = indxWriteBuffer;
             TRACE (("totalRecords is %ld", recordTotalCount));
          }
          else
@@ -205,8 +257,9 @@ class sqlFinestra
             // we pass the opened db so the query can be faster
             sqlFinestra extraq = sqlFinestra (db);
 
-            sqlFetch << "select count(*) as ntot from (" << sqlSelQuery << ")";
-            extraq.setSelectQuery (sqlFetch.str ());
+            std::stringstream sqlCount;
+            sqlCount << "select count(*) as ntot from (" << sqlSelQuery << ")";
+            extraq.setSelectQuery (sqlCount.str ());
             recordTotalCount = atol (extraq.getCurrentValue ("ntot").c_str ());
             TRACE (("obtain totalRecords %ld", recordTotalCount));
          }
@@ -215,10 +268,13 @@ class sqlFinestra
       {
          // check is it still consistent
          //assert (recordTotalCount >=  recordOffset + recordOffset - 1)
-         if (recordTotalCount < recordOffset + recordOffset - 1)
+
+         // check only if recordTotalCount is too small given the data in cache
+         // we cannot check if it is too big with this information.
+         if (recordTotalCount < recordOffset + indxWriteBuffer - 1)
          {
-            TRACE (("adjusted wrong totalRecords %ld to %ld", recordTotalCount, recordOffset + recordOffset - 1));
-            recordTotalCount = recordOffset + recordOffset - 1;
+            TRACE (("adjusted small totalRecords from %ld to %ld", recordTotalCount, recordOffset + indxWriteBuffer - 1));
+            recordTotalCount = recordOffset + indxWriteBuffer - 1;
          }
       }
       if (currentCursor < minRecordNr ())
@@ -239,43 +295,51 @@ class sqlFinestra
 protected:
 
    long min (long a, long b) { return a < b ? a: b; }
+   long max (long a, long b) { return a > b ? a: b; }
 
    long minRecordNr () { return recordOffset ; }
-   long maxRecordNr () { return min (recordOffset + MAX_CACHE_ROWS - 1, recordTotalCount) ; }
+   long maxRecordNr ()
+   {
+      return min (recordOffset + indxWriteBuffer - 1, recordTotalCount);
+   }
 
-   string defaultDBName = "defetuosa.db";
-   bool openByMe = false;
-   sqlite3 * db = 0;
+   long MAX_CACHE_ROWS;
+   string defaultDBName;
+   bool openByMe;
+   sqlite3 * db;
 
    string dbName;
    string sqlSelQuery;
    Eva dataBuffer;
-   long indxBuffer = 0;  // last assigned index in dataBuffer
+   long indxWriteBuffer;  // last assigned index in dataBuffer
 
-   long currentCursor = 0;
-   long recordOffset = 0;
-   long recordTotalCount = -1;
+   long currentCursor;
+   long recordOffset;
+   long recordTotalCount;
 
    // called by static_execute_callback on each record
    //
    void addRecord (int ncols, char ** colValues, char ** colNames)
    {
-      if (indxBuffer == 0)
+      TRACE (("sqlFinestra@addRecord, indxWriteBuffer %ld, columns %d", indxWriteBuffer, ncols));
+      if (indxWriteBuffer == 0)
       {
+         dataBuffer.ensureDim (1, ncols);
          for (int cc = 0; cc < ncols; cc ++)
             dataBuffer[0][cc] = colNames[cc];
       }
-      indxBuffer ++;
+      indxWriteBuffer ++;
 
-      if (indxBuffer > MAX_CACHE_ROWS + 1)
+      if (indxWriteBuffer > MAX_CACHE_ROWS + 1)
       {
          // it should never happen!
-         TRACE_ERR (("sqlFinestra ERROR: indxBuffer %ld to big!", indxBuffer));
+         TRACE_ERR (("sqlFinestra ERROR: indxWriteBuffer %ld to big!", indxWriteBuffer));
          return;
       }
 
+      dataBuffer.ensureDim (indxWriteBuffer + 1, ncols);
       for (int cc = 0; cc < ncols; cc ++)
-         dataBuffer[indxBuffer][cc] = colValues[cc];
+         dataBuffer[indxWriteBuffer][cc] = colValues[cc];
    }
 
    static int static_execute_callback (void * obj, int ncols, char ** colValues, char ** colNames)

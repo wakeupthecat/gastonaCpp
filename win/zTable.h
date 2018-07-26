@@ -250,3 +250,43 @@ protected:
 };
 
 #endif //  _HEADER_H
+
+/*
+from https://www.codeguru.com/cpp/controls/controls/scrollbars/article.php/c2323/Handling-The-ScrollBar.htm
+
+
+  SCROLLINFO ScrollInfo;
+  ScrollInfo.cbSize = sizeof(ScrollInfo);     // size of this structure
+  ScrollInfo.fMask = SIF_ALL;                 // parameters to set
+  ScrollInfo.nMin = 0;                        // minimum scrolling position
+  ScrollInfo.nMax = 100;                      // maximum scrolling position
+  ScrollInfo.nPage = 40;                      // the page size of the scroll box
+  ScrollInfo.nPos = 50;                       // initial position of the scroll box
+  ScrollInfo.nTrackPos = 0;                   // immediate position of a scroll box that the user is dragging
+  m_MyScrollBar.SetScrollInfo(&ScrollInfo);
+  
+  
+   case SB_BOTTOM:         //Scrolls to the lower right. 
+      break;
+    case SB_ENDSCROLL:      //Ends scroll. 
+      break;
+    case SB_LINEDOWN:       //Scrolls one line down. 
+      SetScrollPos(GetScrollPos() + 1);
+      break;
+    case SB_LINEUP:         //Scrolls one line up. 
+      SetScrollPos(GetScrollPos() - 1);
+      break;
+    case SB_PAGEDOWN:       //Scrolls one page down. 
+      SetScrollPos(GetScrollPos() + ScrollInfo.nPage);
+      break;
+    case SB_PAGEUP:         //Scrolls one page up. 
+      SetScrollPos(GetScrollPos() - ScrollInfo.nPage);
+      break;
+    case SB_THUMBPOSITION:  //The user has dragged the scroll box (thumb) and released the mouse button. The nPos parameter indicates the position of the scroll box at the end of the drag operation. 
+      break;
+    case SB_THUMBTRACK:     //The user is dragging the scroll box. This message is sent repeatedly until the user releases the mouse button. The nPos parameter indicates the position that the scroll box has been dragged to. 
+      SetScrollPos(nPos);
+      break;
+    case SB_TOP:            //Scrolls to the upper left. 
+      break;
+*/

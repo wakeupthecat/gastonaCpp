@@ -234,7 +234,7 @@ protected:
    //   java Cadena opt   ~   5012 millis  ..java
    //   js Firefox        ~   8000 millis  ..JS
    //   C (strcat)        ~  12000 millis  Only using strcpy, strcat (no std::string), therefore limited size (no malloc)
-   // * C++ (fastCell)    ~  14700 millis  hybrid : strcpy, strcat until 600 chars then string::substr
+   // * C++ (fastCell)    ~  14700 millis  hybrid : strcpy, strcat until 1024 chars then string::substr
    //   js Chrome         ~  15500 millis  ..JS
    //   C++ (substr)      ~  45700 millis  No strcpy, strcat but only std:string
    //   C++ (old Cadena)  ~ 169700 millis  old algorithm
