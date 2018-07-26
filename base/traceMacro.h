@@ -51,6 +51,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #define TRACE(x) do { if (DBG_ON) { printAppTime printf x; } } while (0)
 #define TRACERROR(x) do { printAppTime printf(" ERROR: "); printf x; } while (0)
+#define TRACE_ERR(x) do { printAppTime printf(" ERROR: "); printf x; } while (0)
 
 #ifdef DBG_LEVEL_1
    #define TRACE1(x) do { if (DBG_ON) printAppTime printf x; } while (0)

@@ -1,0 +1,1 @@
+gcc -std=c++11 -I../base -I../sqlite -o testsql.exe test_sqlFinestra.cpp ../outwin/sqlite3.o -lstdc++

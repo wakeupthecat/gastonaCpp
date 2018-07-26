@@ -1,4 +1,6 @@
 /*
+   docu 
+     https://developer.gnome.org/gtk2/stable/api-index-full.html
 */
 
 #ifndef zWIDGET_HEADER_H

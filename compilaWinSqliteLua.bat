@@ -1,3 +1,4 @@
+mkdir outwin
 echo ========== Compiling sqlite ...
 cd sqlite
 gcc -c -o ../outwin/shellmain.o shellmain.c
