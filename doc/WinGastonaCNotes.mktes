@@ -33,16 +33,6 @@ This includes
 
 Improve, add and test zWidgets
 
----- Sqlite
-
-Simpler interface with sqlite, for instance
-
-      vector<string> errors = sqliteExecute (database, script or file or memory file);
-      
-      EvaUnit out = sqliteSelect (database, script or file or memory file);
-
-Generic sqliteSelectWindow to handle automatically scrolling
-
 Add generic data model (evatable or sqlSelect) to all widgets that need it
 
 ---- Lua

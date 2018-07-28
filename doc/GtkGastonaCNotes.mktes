@@ -7,7 +7,7 @@ Proof of concept that compiles, links and executes for Linus using gtk+2.0 and g
 This includes
 
    - Basic zWidgets : 
-         zButton
+         zButton, zLaabel, zCheckBox, zList
          
    - javaj : instanciation and layout including layout composition
    
@@ -27,7 +27,7 @@ Add much more zWidgets, actually using gtk it is a quite straighforward task!
 
 ---- Sqlite & Lua
 
-Same todos as with GatonaC in Windows since they are base features.
+Same todos as with GastonaC++ in Windows since they are base features.
 
 --- Compilation
 
@@ -58,23 +58,8 @@ Then compile gastonaC
 
 We need in the gcc command :
 
-Our stuff
+Our stuff + gtk+2.0 configuration + libraries -lstdc++ -lm -ldl
 
-      -std=c++11 -Ibase -Igtk -Ilua-5.3.4/src -o outgtk/gastonaGtk base/EvaLayoutManager.cpp gtk/mainGtk.cpp outgtk/liblua.a outgtk/shellmain.o outgtk/sqlite3.o
+	mkdir outgtk
+	gcc -std=c++11 -Ibase -Igtk -Ilua-5.3.4/src -o outgtk/gastonaGtk base/EvaLayoutManager.cpp gtk/mainGtk.cpp outgtk/liblua.a outgtk/shellmain.o outgtk/sqlite3.o `pkg-config --cflags gtk+-2.0 --libs glib-2.0`  -lstdc++ -lm -ldl
 
-Configuration gtk+2.0
-
-      -pthread -I/usr/include/gtk-2.0 -I/usr/lib/x86_64-linux-gnu/gtk-2.0/include -I/usr/include/gio-unix-2.0/ -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/libpng12 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/libpng12 -I/usr/include/pango-1.0 -I/usr/include/harfbuzz -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/freetype2 -lgtk-x11-2.0 -lgdk-x11-2.0 -lpangocairo-1.0 -latk-1.0 -lcairo -lgdk_pixbuf-2.0 -lgio-2.0 -lpangoft2-1.0 -lpango-1.0 -lgobject-2.0 -lglib-2.0 -lfontconfig -lfreetype
-
-Extra libraries
-
-      -lstdc++ -lm -ldl
-
-
-      - setting all possible header sources base, win, sqlite etc 
-      - includers of sqlite or lua has to declare extern "C" before since these libraries are C
-      - link the C objects always after the main c and at the end the linker directive!
-
-      
-      g++ -std=c++11 -fpermissive -static -Ibase -Iwin -Ilua-5.3.4/src -o outwin\gastonaW.exe win/winMainGast.cpp outwin\liblua.a outwin\shellmain.o outwin\sqlite3.o -l gdi32
-      
