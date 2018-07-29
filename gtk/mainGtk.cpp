@@ -58,6 +58,13 @@ int main (int nn, char ** aa)
    mainFrame = gtk_window_new (GTK_WINDOW_TOPLEVEL);
    gtk_window_set_title (GTK_WINDOW (mainFrame), "Gastona_Gtk");
    gtk_widget_set_usize (mainFrame, 200, 200);
+
+   //allow the user ALWAYS redim the window to zero if he wants
+   //this has to be a brand in all gastona versions
+   //thus configuring this has to be avoided
+   //
+   gtk_window_set_policy (GTK_WINDOW (mainFrame), TRUE, TRUE, FALSE);
+
    gtk_signal_connect (GTK_OBJECT (mainFrame), "delete_event", GTK_SIGNAL_FUNC (on_delete_event), NULL);
 
    gtk_signal_connect (GTK_OBJECT (mainFrame), "key_press_event", GTK_SIGNAL_FUNC (on_key_press), NULL);
@@ -69,7 +76,17 @@ int main (int nn, char ** aa)
    gtk_widget_add_events(GTK_WIDGET(mainFrame), GDK_CONFIGURE);
    g_signal_connect (G_OBJECT(mainFrame), "configure-event", G_CALLBACK(on_configure_event), NULL);
 
-   gaston.loadGUI (mainFrame, fixer, (nn > 1) ? aa[1]: "");
+   if (gaston.loadGUI (mainFrame, fixer, (nn > 1) ? aa[1]: ""))
+   {
+      // main frame, note that it can be named different from "main"!
+      gastonaCBase::frameWindow haupt = gaston.getMainFrame ();
+      //MoveWindow (hwnd, haupt.posx, haupt.posy, haupt.dx, haupt.dy, TRUE);
+      gtk_widget_set_usize (mainFrame, haupt.dx, haupt.dy);
+   }
+
+   // uniRect mango = gaston.getPreferredSizeOfMain ();
+   // TRACE (("preferred size main %d, %d", mango.dx, mango.dy ));
+
    gaston.showLayout (mainFrame);
    gtk_widget_show (mainFrame);
 

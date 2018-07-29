@@ -4,7 +4,7 @@
 
    <layout of main>
       EVALAYOUT, 10, 10, 5, 5
-       zzz,        ,   X
+       zzz, 150    ,   X
           , bBatuno, iPasoto
           , lLambrosio, +
           , kCheckol, +
