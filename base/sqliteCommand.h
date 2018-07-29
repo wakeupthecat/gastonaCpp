@@ -37,6 +37,10 @@ class sqliteCommand: public MensakaTarget
    
    virtual bool takePacket (int mappedMsg, EvaUnit & pk, const vector<string> & params)
    {
+      // just prepared for possible use, of course a static notification to the messages
+      // is needed as well. Some possible messages
+      //    -->, sqlCommand.setDefaultDB, myTemp.db
+      //    -->, sqlCommand.switchEngine, postgresql
    }   
 };
 

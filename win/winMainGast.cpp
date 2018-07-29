@@ -179,8 +179,17 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 
       case WM_CREATE:
          {
-            gaston.loadGUI (hwnd, gastonaMainGastFile.c_str ());
+            if (gaston.loadGUI (hwnd, gastonaMainGastFile.c_str ()))
+            {
+               // main frame, note that it can be named different from "main"!
+               gastonaCBase::frameWindow haupt = gaston.getMainFrame ();
+               MoveWindow (hwnd, haupt.posx, haupt.posy, haupt.dx, haupt.dy, TRUE);
+            }
+
             gaston.showLayout (hwnd, true);
+            uniRect mango = gaston.getPreferredSizeOfMain ();
+            TRACE (("preferred size main %d, %d", mango.dx, mango.dy ));
+            // printf ("PREFERRED size main %d, %d", mango.dx, mango.dy );
           }
          break;
 

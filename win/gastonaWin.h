@@ -81,8 +81,7 @@ public:
 
    bool loadGUI (HWND hwnd, const string & gastFileName)
    {
-      if (!loadGast (gastFileName))
-         return false;
+      super::loadGast (gastFileName);
       return loadGUI (hwnd, wastEvafile["javaj"], wastEvafile["data"]);
    }
 
@@ -164,6 +163,11 @@ public:
       // insert it into the two maps
       mapzWidgetByID [zw->getControlID ()] = zw;
       mapIDByName    [zw->getName ()]      = zw -> getControlID ();
+   }
+
+   uniRect getPreferredSizeOfMain ()
+   {
+      return layManager.getPreferredSizeOf ("main");
    }
 
    void showLayout (HWND frameHwnd, bool forceInvalidate = false)

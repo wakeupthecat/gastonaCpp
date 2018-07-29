@@ -12,7 +12,6 @@
 #include "EvaFile.h"
 
 #include "listix.h"
-#include "sqliteCommand.h"
 
 #include "gastonaCGlobals.h"
 
@@ -58,9 +57,35 @@ protected:
 
 public:
 
-   // listix loListix;
+   struct frameWindow
+   {
+      string name = "dummy";
+      string title;
+      int posx = 0;
+      int posy = 0;
+      int dx = 200;
+      int dy = 100;
+   };
+
+   vector<frameWindow> frames;
    listix theListix;
-   sqliteCommand theSliteCommand;
+
+   frameWindow getMainFrame ()
+   {
+      return frames.size () > 0 ? frames[0]: frameWindow ();
+   }
+
+   frameWindow getFrame (const string & name = "")
+   {
+      if (frames.size () == 0)
+         return frameWindow ();
+      if (name.length () == 0)
+         return frames[0];
+      for (int ii = 0; ii < frames.size (); ii ++)
+         if (frames[ii].name == name)
+            return frames[ii];
+      return frameWindow ();
+   }
 
    bool startsWith (const string & source, const string & comp)
    {
@@ -103,31 +128,66 @@ public:
       return widlist;
    }
 
+   void loadFrames ()
+   {
+      if (EvaFile::isNILEvaUnit (wastEvafile["javaj"]))
+         // keep frames.size () == 0
+         return;
+
+      Eva & framarr = wastEvafile["javaj"]["frames"];
+      EvaUnit & udata = wastEvafile["data"];
+      for (int ff = 0; ff < framarr.rows (); ff ++)
+      {
+         frameWindow fr;
+         fr.name = framarr[ff][0];
+         fr.title = framarr[ff][1];
+
+         // only set initial sizes it if specified !
+         if (framarr[ff].size () > 2)
+            fr.dx = atoi (framarr[ff][2].c_str());
+         if (framarr[ff].size () > 3)
+            fr.dy = atoi (framarr[ff][3].c_str());
+
+         // custom pos and size if made persistent
+         //
+         if (! EvaUnit::isNILEva (udata[fr.name + " posX"])) fr.posx = atoi (udata[fr.name + " posX" ][0][0].c_str ());
+         if (! EvaUnit::isNILEva (udata[fr.name + " posY"])) fr.posy = atoi (udata[fr.name + " posY" ][0][0].c_str ());
+         if (! EvaUnit::isNILEva (udata[fr.name + " sizeX"])) fr.dx  = atoi (udata[fr.name + " sizeX"][0][0].c_str ());
+         if (! EvaUnit::isNILEva (udata[fr.name + " sizeY"])) fr.dy  = atoi (udata[fr.name + " sizeY"][0][0].c_str ());
+
+         frames.push_back (fr);
+      }
+
+      // if #javaj# exists and no frames given then ensure at least 1 frame = "main"
+      //
+      if (frames.size () == 0)
+      {
+         frameWindow fr;
+         fr.name = "main";
+         fr.title = udata ["main title"][0][0];
+         frames.push_back (fr);
+      }
+   }
+
 
    bool loadGast (const string & gastFileName)
    {
-      // loading javaj layouts
+      // loading the entire gast file in memory
       //
       wastEvafile = EvaFile (gastFileName);
-      EvaUnit & euJavaj = wastEvafile["javaj"];
-      if (EvaFile::isNilEvaUnit (euJavaj)) return false;
-      printf ("jarjorlar :\n%s\n---\n", euJavaj.toString ().c_str ());
-      
-      // loading sqliteCommand engine
+
+      loadFrames ();
+      // javaj part will be loaded by each concrete loadGUI method
       //
-      vector<string> in;
-      vector<string> out;
-      vector<string> err;
-      in.push_back ("-version");
-      theSliteCommand.executeCommand (in, out, err);
-      printf ("sqliteEngines :\n%s\n---\n", out.size () > 0 ? out[0].c_str (): "?");
+      //    EvaUnit & euJavaj = wastEvafile["javaj"];
+      //    if (EvaFile::isNILEvaUnit (euJavaj)) return false;
+      //    printf ("jarjorlar :\n%s\n---\n", euJavaj.toString ().c_str ());
 
       // loading listix logic (lua)
       //
-      cout << "rascos listix!" << endl;
       theListix.load (wastEvafile["luaix"], wastEvafile["data"]);
       printf ("listix loaded\n--\n");
-      
+
       return true;
    }
 
@@ -145,7 +205,7 @@ public:
    {
       // ---- EvaLayout: do the real job
       //
-      layManager.doShowLayout("main", dx, dy);
+      layManager.doShowLayout(getMainFrame ().name, dx, dy);
    }
 
    bool haszWidgetName (const string & name)

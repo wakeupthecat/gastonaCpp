@@ -250,14 +250,28 @@ public:
 
    // Show the layout named "main" if exists
    //
-   void doShowLayout (int dx, int dy)
-   {
-      doShowByNameAt ("main", 0, 0, dx, dy);
-   }
+   //void doShowLayout (int dx, int dy)
+   //{
+   //   doShowByNameAt ("main", 0, 0, dx, dy);
+   //}
 
    // Show a layout by its name
    //
    void doShowLayout  (const string & cname, int dx, int dy);
+
+
+   uniRect getPreferredSizeOf (const string & cname)
+   {
+      string rename = doYouMean (cname);
+
+      int indx = getWidgetIndex (rename);
+      if (indx >= 0)
+      {
+         return arrLayWidgets[indx].getPreferredSize ();
+      }
+      return uniRect ();
+   }
+   
 
    // ??
    // ?? int getLayoutCount () { return arrPtrLayouts.size (); }

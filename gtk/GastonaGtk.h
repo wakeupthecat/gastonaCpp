@@ -63,8 +63,7 @@ public:
 
    bool loadGUI (GtkWidget * frame, GtkWidget * fixer, const string & gastFileName)
    {
-      if (!loadGast (gastFileName))
-         return false;
+      super::loadGast (gastFileName);
       return loadGUI (frame, fixer, wastEvafile["javaj"], wastEvafile["data"]);
    }
 

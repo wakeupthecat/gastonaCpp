@@ -95,7 +95,7 @@ public:
 
    EvaUnit & getSomehowUnit (const string & unitname)
    {
-      if (isNilEvaUnit (getUnit (unitname)))
+      if (isNILEvaUnit (getUnit (unitname)))
       {
          mapAllUnits [unitname] = EvaUnit (unitname);
          unitCatalog.push_back (unitname);
@@ -320,7 +320,7 @@ public:
       return (it != mapAllUnits.end ()) ? it->second: NIL_EvaUnit ();
    }
 
-   static bool isNilEvaUnit (EvaUnit & eu) { return &eu == &NIL_EvaUnit (); }
+   static bool isNILEvaUnit (EvaUnit & eu) { return &eu == &NIL_EvaUnit (); }
 
 protected:
 

@@ -1,10 +1,10 @@
 #javaj#
 
-   <frames>  main, gasWinter.gast
+   <frames>  main, gasWinter.gast, 300, 200
 
    <layout of main>
       EVALAYOUT, 10, 10, 5, 5
-       zzz,   200   ,   X
+       zzz,        ,   X
           , bBatuno, iPasoto
           , lLambrosio, +
           , kCheckol, +

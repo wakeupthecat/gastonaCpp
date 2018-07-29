@@ -353,7 +353,7 @@ public:
        return eline;
    }
 
-   static bool isNilString (string & str) { return &str == &NIL_string (); }
+   static bool isNILString (string & str) { return &str == &NIL_string (); }
 
 protected:
 

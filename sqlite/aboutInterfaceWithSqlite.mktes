@@ -1,0 +1,100 @@
+#h About he sqlite interface
+
+The main idea here is "keep it as simple as possible", not only to avoid effort developing
+an interface but for important functional reasons as well. As an example, accessing remote
+databases.
+
+-- Sqlite now as native
+
+Since sqlite is C, now there is no need of providing sqlite3.exe as separate binary as it
+is done in gastona for java.
+
+Still the simplicity of the previous interface is wanted since it allowed effortless
+exchanging the sql engine as it was done for example with postgress psql and sqlite+Berckeley
+in some tests.
+
+The interface was:
+
+   1) allow to execute arbitrary sql commands with no feedback but handling of errors if any
+   2) handle an arbitrary select query transparently in chunks, that is windowing
+      the response using "LIMIT offset, size"
+
+it turns out that this simple mechanism of sending a query as text and receiving also
+the response as text is the only possibility available when accessing some remote
+databases, for example postgress, which indicates that is really enough.
+
+Apart from some additional capabilities of getting the schema anything else is needed from a database
+as used in gastona applications.
+
+-- sqlFinestra.h
+
+The class sqlFinestra handles the select as described and allow execute sql statements as well
+
+Some sample code using it
+
+creating some data and starting a select query about it
+
+      sqlFinestra sq ("mytest.db");
+
+      sq.executeSQL ("CREATE TABLE IF NOT EXISTS prova (id, nom); DELETE FROM prova;");
+      sq.executeSQL ("INSERT INTO prova VALUES (1, 'marla');"
+                     "INSERT INTO prova VALUES (2, 'alea');"
+                     "INSERT INTO prova VALUES (3, 'marvin');"
+                     "INSERT INTO prova VALUES (4, 'abel');"
+                    );
+
+      sq.setSelectQuery ("SELECT * FROM prova ORDER BY nom");
+
+      // now we have resulting records from 1 to sq.getCountRecords ();
+      //
+
+      // getting all column names of the result
+      //
+      vector<string> cols = sq.getColumns ();
+
+      // getting a specific value using rowindx (1 .. sq.getCountRecords ())
+      // and column index (0 .. sq.getColumns ().size ())
+
+      string sq.getValue (4, "nom"); // will give "marvin" (last alphabetically)
+      string sq.getValue (1, 1);     // will give "abel" (first alphabetically and 1 = column index for "nom")
+
+      // also is possible to set a specific record
+      sq.setCursor (sq.getCountRecords () / 2);
+      .. sq.getCurrentRecordIndex (); // what is the current record index
+      .. sq.getCurrentValue ("id");
+      .. sq.getCurrentValue ("nom");
+
+
+-- About the command line (shell) object
+
+Initially it was prepared an access directly to the command line
+based on the original shell.c plus the custom function
+
+      function "samefilecontent(filename, blobfield)"
+
+renaming the main function in a similar one called shellmain
+
+      int SQLITE_CDECL shellmain(int argc, char **argv)
+
+this is done in shellmain.c
+
+Finally wrapping all that in class sqliteCommand.h.
+
+The way of using this "procedure command" is shown below
+
+      #include "sqliteCommand.h"
+      ...
+
+      sqliteCommand theSliteCommand;
+
+      ...
+
+      // loading sqliteCommand engine
+      //
+      vector<string> in;
+      vector<string> out;
+      vector<string> err;
+      in.push_back ("-version");
+      theSliteCommand.executeCommand (in, out, err);
+      printf ("sqliteEngines :\n%s\n---\n", out.size () > 0 ? out[0].c_str (): "?");
+

@@ -40,7 +40,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // see https://social.msdn.microsoft.com/Forums/windowsdesktop/en-US/674d34c9-b6f6-4380-bc7b-181eae99847a/timeval-struct-incorrect?forum=windowssdk
 #define timeval int
 
-#define printAppTime { printf (""); }
+#define printAppTime { printf ("\n"); }
 #define gettimeofday(p,t)
 
 #endif // WIN32
