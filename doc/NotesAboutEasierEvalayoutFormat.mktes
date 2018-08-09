@@ -1,0 +1,132 @@
+#h Acerca de hacer mas amigable EvaLayout
+
+-- Idea inicial
+
+La idea inicial de gastona en general siempre a sido crear el GUI
+simplemente con nombrar los widgets. Por ejemplo
+
+
+      "Tengo un boton y una entrada ..."
+   
+      se podría modelar/genera como
+
+
+      #gui#
+          botonA, entradaJ
+          
+
+evidentemente necesitamos un mínimo de variables etc
+
+-- Propuesta evalayout formato EVA2
+         
+en lugar de 
+
+      <layout of main>
+         EVA, 7, 7, 3, 3
+         
+            ,       , X
+            , lSorzo, eSorzo
+          X , sTabola, -
+
+escribir
+
+      <layout of main>
+         EVA2
+
+         lSorzo   , X:eSorzo
+         X:sTabola, -
+
+siempre el "formateador" de columna/fila se encuentra la primera fila/columna (al revés!)
+
+Hay un problema con el primer elemento en fila 1 columna 1 que se puede solucionar con un formateador especial
+o doble, por ejemplo
+
+         X::primero o X-:primero   formatea la columna 1
+         
+         :X:primero o -X:primero   formatea la fila 1
+         
+--- Variante retrasada
+
+El modificar se pone al final para mejor alineamiento y lectura de los nombres
+
+   <layout of main>
+      EVA2
+
+      bSabroson:200, ePasoto:X
+      lLabello     , tAmbrosia
+      iRogelia:X   , +
+          +        , xTexto:X
+      partit:200   , -
+
+La notación es difícil de interpretar, por ejemplo 
+
+      P: se expande tAmbrosia ?
+      R: Sí puesto que se extiende a la siguiente fila y ahí iRogelia se expande
+
+      P: Es corrector xTexto:X ?
+      R: Pues no! xTexto se extiende ya en horizontal debido a ePastoso:X
+         si queremos que se extienda en vertical debemos poner "+:X" en la primera columna
+
+--- Variante natural
+
+      <layout of main>
+        EVA2
+
+        bSabroson, ePasoto
+        lLabello , tAmbrosia
+        iRogelia , +
+            +    , xTexto
+        partit   , -
+
+aquí podemos inferir que, (naturalmente) 
+
+      ePastoso se extiende en horizontal
+      tAmbrosia y iRogelian lo hacen en vertical
+      xTexto lo hace en ambos sentidos
+      
+quizás se podrían admitir correcciones del tipo
+      
+         300
+     22, bSabroson, ePasoto
+         ...
+
+o 
+
+         bSabroson, ePasoto, 22
+         ...
+         300
+
+En general poner los formateadores de columna en la primera o última fila
+da exactamente igual (no hay ventaja ni inconveniente)
+
+poner los formateadores de fila en la primera o última columna 
+
+En la primera es molesto cuando no hay necesidad de ninguno
+
+En la segunda es molesto cuando hay necesidad poner alguno porque en general
+no vamos a tener una última columna bien definida
+
+
+-- Candidata a EVA2
+
+Variante "natural" con corrección puntual
+
+Para la implementación de "natural" cada zWidget debe ofrecer la información extra
+
+      isNaturalExtendHorizontal ()
+      isNaturalExtendVertical ()
+      
+Para la implementación de corrección puntual (formato1), por ejemplo
+
+         300
+     22, bSabroson, ePasoto
+         ...
+
+el parser de EVA2 layout debe reconocer 
+
+      1) si hay fila "-1", es decir la primera fila es de formateadores (300)
+      2) en cada fila si esta empieza con una columna "-1"
+
+esto es bastante fácil de implementar puesto que los formateadores son reconocibles
+siempre y cuando prohibamos el widget con nombre "X", "X2" etc
+

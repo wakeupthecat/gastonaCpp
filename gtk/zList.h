@@ -1,4 +1,9 @@
 /*
+   doc at 
+   https://en.wikibooks.org/wiki/GTK%2B_By_Example/Tree_View
+   
+   https://en.wikibooks.org/wiki/GTK%2B_By_Example/Tree_View/Custom_Models
+
 */
 
 #ifndef zLIST_HEADER_H

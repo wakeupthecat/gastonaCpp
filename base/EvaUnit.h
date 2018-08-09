@@ -97,7 +97,7 @@ class EvaUnit
 
    // return false if eva was already in the unit
    //
-   bool add (const Eva & nova)
+   bool addEva (const Eva & nova)
    {
       if (! containsEva (nova.getName ()))
       {
@@ -108,6 +108,12 @@ class EvaUnit
       return false;
    }
 
+   // alias from addEva
+   bool add (const Eva & nova)
+   {
+      return addEva (nova);
+   }
+   
    void clear ()
    {
       mapUnit.clear ();
