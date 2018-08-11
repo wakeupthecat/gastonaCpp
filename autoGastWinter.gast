@@ -35,6 +35,26 @@
     " 6",1154, Lisabondia, 1980.01.10, //Se va a la antártida, ya veremos...
     44,7781, Umbramerta, 1992.02.22, //Se matricula
 
+
+   <aSalo>
+      node, icon,
+
+      cat/barna/eixample/clinic
+      cat/barna/eixample/casp
+      cat/barna/eixample/sagrada familia
+      cat/barna/horta/guinardo/garriga i roca
+      cat/barna/horta/guinardo/avinguda montserrat
+      cat/barna/horta/clot/estacio
+      deu/dresden/neustadt/talstrasse
+      deu/dresden/neustadt/nikki faktur
+      deu/dresden/altstadt/Großer Garten
+      deu/dresden/altstadt/Johhanstadt
+      deu/stuttgart/nord/stammheim/zikadenweg
+      deu/stuttgart/nord/stammheim/weichtuch
+      deu/stuttgart/stadmitte/nesenbachstr
+      deu/stuttgart/stadmitte/vaquita
+
+
 #luaix#
 
    <main0>

@@ -1,14 +1,20 @@
 /*
+   https://www.codeproject.com/Articles/3448/Using-TreeControl-TreeView-under-Win32-API
+
+   http://www.songho.ca/misc/treeview/treeview.html
 */
 
 #ifndef zTREE_HEADER_H
 #define zTREE_HEADER_H
 
+#include <windows.h>
+#include <commctrl.h>
+
 #include "zWidget.h"
 #include "Mensaka.h"
 
-#include <windows.h>
-#include <commctrl.h>
+#include "EBSTree.h"
+#include "utilTree.h"
 
 using namespace std;
 
@@ -62,11 +68,11 @@ public:
 
    void updateData ()
    {
-      Eva & edata = getAttribute ("");
+      EBSTree modelo = EBSTree (getName (), getDataAndControl ());
 
-      if (EvaUnit::isNILEva (edata))
-           setData (Eva ());
-      else setData (edata);
+      // TreeView_DeleteAllItems(hwnd);
+      eva2TreeStruct asserrao = utilTree::sierra (modelo);
+      pushNodes (asserrao);
    }
 
    virtual void winMessage (HWND hwin, int winHiWord)
@@ -90,30 +96,82 @@ public:
       return (HTREEITEM)::SendMessage (hwnd, TVM_INSERTITEM, 0, (LPARAM)&tvinsert);
    }
 
-   void setData (const Eva & value)
+   void pushNodes (eva2TreeStruct & aserro)
    {
-      if (!hwnd) return;
+      vector<HTREEITEM> elevos;
 
-      HTREEITEM Parent;           // Tree item handle
-      HTREEITEM Before;           // .......
-      HTREEITEM Root;
+      //root node
+      HTREEITEM root = insertTo(NULL, TEXT("root"), 0); // title or whatever
+      elevos.push_back (root);
+      printf ("Cargamos arbols de %d nods\n", aserro.eva.rows ());
 
-      Parent = insertTo(NULL, TEXT("MAOCS30 Command"), 0);
-      Root = Parent;
-      Before = Parent;
+      for (int rr = 0; rr < aserro.eva.rows (); rr ++)
+      {
+         int cc = 0;
+         while (++cc < aserro.eva[rr].cols ())
+         {
+            if (aserro.eva[rr][cc].length () == 0) continue; // no node content at this depth
 
-      Parent = insertTo (Parent, TEXT("Native command"), 0);
-      insertTo(Parent, TEXT("Power On PETAAARDO!!!"), 0);
-      insertTo(Parent, TEXT("Power off"), 0);
-      insertTo(Parent, TEXT("Entrant"), 0);
-      insertTo(Parent, TEXT("Sortant"), 0);
+            //resize stack of open nodes (adjust to current depth)
+            if (elevos.size () > cc)
+               elevos.resize (cc);
 
-      Parent = insertTo(Before, TEXT("Macro"), 0);
-      insertTo(Parent, TEXT("ChangeCode"), 0);
-      insertTo(Parent, TEXT("CipherData"), 0);
+            // if (aserro.eva[rr].cols () > cc + 2)
+            // {
+            //    // possible short
+            //    // examine if next has less than cc blanks (or there is no next) then it is short!!
+            //    // join all cc until last -1 with separator as node text
+            // 
+            //    //Example
+            //    //       spain, barcelona, centre, gotic
+            //    //            ,          , eixample, clinic
+            //    //            ,          ,         , casp
+            //    //            ,          , horta   , guinardo, garriga i roca
+            //    //            ,          , sants   , badal
+            //    //            ,          ,         , torrasa, mercat          , ateneu, pis1
+            //    //            ,          ,         ,        , hospi           , etc
+            //    //    ----------------------------------------------------------------------
+            //    //         0  ,    1     ,   2     ,   3    , 4               , 5
+            // 
+            //    // here there are two short paths:
+            //    //          horta/guinardo    (elems = 3;  pos"sants"-pos"horta" = 0   ;   3-0-1 = 2 elements to join
+            //    //          mercat/ateneu     (elems = 4;  pos"hospi"-pos"torrasa" = 1 ;   4-1-1 = 2 elements to join
+            // 
+            // }
 
-      insertTo(NULL, TEXT("Bla bla bla bla..."), 0);
+            HTREEITEM parent = elevos[elevos.size ()-1];
+            elevos.push_back (insertTo(parent, TEXT(aserro.eva[rr][cc].c_str ()), 0));
+            printf ("Insert node \"%s\" at depth %d\n",  aserro.eva[rr][cc].c_str (), elevos.size ());
+         }
+      }
    }
 };
 
 #endif //  HEADER_H
+
+//
+//   void setData_FAKE (const Eva & value)
+//   {
+//      if (!hwnd) return;
+//
+//      HTREEITEM Parent;           // Tree item handle
+//      HTREEITEM Before;           // .......
+//      HTREEITEM Root;
+//
+//      Parent = insertTo(NULL, TEXT("MAOCS30 Command"), 0);
+//      Root = Parent;
+//      Before = Parent;
+//
+//      Parent = insertTo (Parent, TEXT("Native command"), 0);
+//      insertTo(Parent, TEXT("Power On PETAAARDO!!!"), 0);
+//      insertTo(Parent, TEXT("Power off"), 0);
+//      insertTo(Parent, TEXT("Entrant"), 0);
+//      insertTo(Parent, TEXT("Sortant"), 0);
+//
+//      Parent = insertTo(Before, TEXT("Macro"), 0);
+//      insertTo(Parent, TEXT("ChangeCode"), 0);
+//      insertTo(Parent, TEXT("CipherData"), 0);
+//
+//      insertTo(NULL, TEXT("Bla bla bla bla..."), 0);
+//   }
+//

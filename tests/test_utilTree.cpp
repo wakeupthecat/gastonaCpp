@@ -19,6 +19,35 @@ Place - Suite 330, Boston, MA 02111-1307, USA.
 
 #include "utilTree.h"
 
+typedef int NODE_HANDLE;
+
+void porpas (eva2TreeStruct & aserro)
+{
+   vector<NODE_HANDLE> elevos;
+   NODE_HANDLE KONOSO = 0;
+
+   //root node
+   elevos.push_back (KONOSO ++);
+
+   for (int rr = 0; rr < aserro.eva.rows (); rr ++)
+   {
+      int cc = 0;
+      while (cc++ < aserro.eva[rr].cols ()) 
+      {
+         if (aserro.eva[rr][cc].length () == 0) continue;
+
+         //resize stack of open nodes
+         if (elevos.size () > cc)
+            elevos.resize (cc);
+         
+         NODE_HANDLE parent = elevos[elevos.size ()-1];
+         
+         elevos.push_back (KONOSO ++);
+         printf ("Nuevo Konoso %d level %d \"%s\" inserted in parent %d\n", KONOSO-1, elevos.size (), aserro.eva[rr][cc].c_str (), parent);
+      }
+   }
+}
+
 int main (int nn, char ** aa)
 {
    EvaUnit modela = EvaUnit ("jala");
@@ -47,8 +76,9 @@ int main (int nn, char ** aa)
    EBSTree etra = EBSTree ("poyos", modela);
 
    eva2TreeStruct asserrao = utilTree::sierra (etra);
-
    printf ("%s", asserrao.eva.toString ().c_str ());
+   
+   porpas (asserrao);
 }
 
 //
