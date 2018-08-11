@@ -59,12 +59,21 @@ public:
 
    struct frameWindow
    {
-      string name = "dummy";
+      frameWindow ():
+         name("dummy"),
+         posx (0),
+         posy (0),
+         dx (200),
+         dy (100)
+      {
+      }
+         
+      string name;
       string title;
-      int posx = 0;
-      int posy = 0;
-      int dx = 200;
-      int dy = 100;
+      int posx;
+      int posy;
+      int dx;
+      int dy;
    };
 
    vector<frameWindow> frames;

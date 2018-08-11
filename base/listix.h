@@ -24,14 +24,16 @@ class listix : public MensakaTarget
 {
 
 public:
-   listix () {};
+   listix ():uLsxFormats (0), uData(0) 
+   {
+   }
 
    // we need pointers since not always is possible to construct
    // the object with the units and also because we want to be able to
    // change them
    //
-   EvaUnit * uLsxFormats = 0;
-   EvaUnit * uData = 0;
+   EvaUnit * uLsxFormats;
+   EvaUnit * uData;
    
    EvaUnit nilFormats;
    EvaUnit nilData;
