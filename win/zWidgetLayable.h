@@ -36,7 +36,7 @@ using namespace std;
 class zWidgetLayable
 {
    public:
-   
+
    //RECT toRECT (uniRect)
    //{
    //   RECT rec;
@@ -78,7 +78,7 @@ class zWidgetLayable
       // windows methods MoveWindow and ShowWindow, the only needed is
       // the position and the component handle
       //
-      
+
       //printf ("%s WI/doShowAt (%d %d %d %d)\n", getName ().c_str (), x, y, dx, dy);
       MoveWindow (winApiHandle, x, y, dx, fixedDy > 0 ? fixedDy: dy, TRUE);
       ShowWindow (winApiHandle, SW_SHOW);

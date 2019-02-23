@@ -1,4 +1,23 @@
 /*
+Gastona C++
+Copyright (C) 2016-2019  Alejandro Xalabarder Aulet
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*/
+
+/*
    https://www.codeproject.com/Articles/3448/Using-TreeControl-TreeView-under-Win32-API
 
    http://www.songho.ca/misc/treeview/treeview.html
@@ -122,7 +141,7 @@ public:
             //    // possible short
             //    // examine if next has less than cc blanks (or there is no next) then it is short!!
             //    // join all cc until last -1 with separator as node text
-            // 
+            //
             //    //Example
             //    //       spain, barcelona, centre, gotic
             //    //            ,          , eixample, clinic
@@ -133,27 +152,27 @@ public:
             //    //            ,          ,         ,        , hospi           , etc
             //    //    ----------------------------------------------------------------------
             //    //         0  ,    1     ,   2     ,   3    , 4               , 5
-            // 
+            //
             //    // here there are two short paths:
             //    //          horta/guinardo    (elems = 3;  pos"sants"-pos"horta" = 0   ;   3-0-1 = 2 elements to join
             //    //          mercat/ateneu     (elems = 4;  pos"hospi"-pos"torrasa" = 1 ;   4-1-1 = 2 elements to join
-            // 
+            //
             // }
 
             HTREEITEM parent = elevos[elevos.size ()-1];
-            
+
             string nodostr = aserro.eva[rr][cc];
-            
-            if (shortpath) 
+
+            if (shortpath)
             {
-               // short until end 
+               // short until end
                //     short = xxx2/xxx3/xxx4/... except the last node = leaf if
                //
                //          ..., xxx0, xxx1, xxx2, xxx3, xxx4, ...
                //             ,     ,     , yyy1, yyy2
                //
-               while (cc+2 < aserro.eva[rr].cols () && 
-                      (rr + 1 == aserro.eva.rows () || 
+               while (cc+2 < aserro.eva[rr].cols () &&
+                      (rr + 1 == aserro.eva.rows () ||
                        cc >= aserro.eva[rr+1].cols () ||
                        aserro.eva[rr+1][cc].length () > 0))
                {
@@ -168,10 +187,10 @@ public:
                //          ..., xxx0, xxx1, xxx2, xxx3, xxx4, ...
                //             ,     ,     ,     , yyy2
                //             ,     ,     ,     , yyy3
-               //             , yyy4, yyy5, 
+               //             , yyy4, yyy5,
                //
             }
-            
+
             elevos.push_back (insertTo(parent, TEXT(nodostr.c_str ()), 0));
             printf ("Insert node \"%s\" at depth %d\n",  nodostr.c_str (), elevos.size ());
          }

@@ -34,17 +34,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
          also we give the manager the all the physical components that it has to handle
 
       on WM_SIZE :
-         we call ::doLayout to ensure the components are dimensioned and placed as defined in the 
-         layout info 
+         we call ::doLayout to ensure the components are dimensioned and placed as defined in the
+         layout info
 
       on WM_COMMAND / ID_BUTTON_1 and IDM_OTRO (menu Switch layout) :
 
          we switch the layout
 
       on WM_COMMAND / ID_BUTTON_2, ID_BUTTON_3, ID_BUTTON_4 :
-      
+
          we demonstrate the action of masking/unmasking a component
-         
+
 */
 
 #include <windows.h>
@@ -281,7 +281,7 @@ void prepareLayout (HWND hDlg)
 
    EvaFile efi ("ConfigDemoSwitchAndMask.eva");
    layoutArray = efi["data"];
-   
+
    if (layoutArray.size () == 0)
    {
       //MessageBox(hDlg, (LPCWSTR) "Working with two harcoded layoutInfo's\nbecause file ConfigLayouts.eva is not found", "Warning", MB_OK);

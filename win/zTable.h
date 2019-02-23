@@ -1,4 +1,20 @@
 /*
+Gastona C++
+Copyright (C) 2016-2019  Alejandro Xalabarder Aulet
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 #ifndef zTABLE_HEADER_H
@@ -264,29 +280,29 @@ from https://www.codeguru.com/cpp/controls/controls/scrollbars/article.php/c2323
   ScrollInfo.nPos = 50;                       // initial position of the scroll box
   ScrollInfo.nTrackPos = 0;                   // immediate position of a scroll box that the user is dragging
   m_MyScrollBar.SetScrollInfo(&ScrollInfo);
-  
-  
-   case SB_BOTTOM:         //Scrolls to the lower right. 
+
+
+   case SB_BOTTOM:         //Scrolls to the lower right.
       break;
-    case SB_ENDSCROLL:      //Ends scroll. 
+    case SB_ENDSCROLL:      //Ends scroll.
       break;
-    case SB_LINEDOWN:       //Scrolls one line down. 
+    case SB_LINEDOWN:       //Scrolls one line down.
       SetScrollPos(GetScrollPos() + 1);
       break;
-    case SB_LINEUP:         //Scrolls one line up. 
+    case SB_LINEUP:         //Scrolls one line up.
       SetScrollPos(GetScrollPos() - 1);
       break;
-    case SB_PAGEDOWN:       //Scrolls one page down. 
+    case SB_PAGEDOWN:       //Scrolls one page down.
       SetScrollPos(GetScrollPos() + ScrollInfo.nPage);
       break;
-    case SB_PAGEUP:         //Scrolls one page up. 
+    case SB_PAGEUP:         //Scrolls one page up.
       SetScrollPos(GetScrollPos() - ScrollInfo.nPage);
       break;
-    case SB_THUMBPOSITION:  //The user has dragged the scroll box (thumb) and released the mouse button. The nPos parameter indicates the position of the scroll box at the end of the drag operation. 
+    case SB_THUMBPOSITION:  //The user has dragged the scroll box (thumb) and released the mouse button. The nPos parameter indicates the position of the scroll box at the end of the drag operation.
       break;
-    case SB_THUMBTRACK:     //The user is dragging the scroll box. This message is sent repeatedly until the user releases the mouse button. The nPos parameter indicates the position that the scroll box has been dragged to. 
+    case SB_THUMBTRACK:     //The user is dragging the scroll box. This message is sent repeatedly until the user releases the mouse button. The nPos parameter indicates the position that the scroll box has been dragged to.
       SetScrollPos(nPos);
       break;
-    case SB_TOP:            //Scrolls to the upper left. 
+    case SB_TOP:            //Scrolls to the upper left.
       break;
 */
