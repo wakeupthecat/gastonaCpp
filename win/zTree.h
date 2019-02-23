@@ -72,7 +72,7 @@ public:
 
       // TreeView_DeleteAllItems(hwnd);
       eva2TreeStruct asserrao = utilTree::sierra (modelo);
-      pushNodes (asserrao);
+      pushNodes (asserrao, modelo.getIsShortPath (), modelo.getSeparator ());
    }
 
    virtual void winMessage (HWND hwin, int winHiWord)
@@ -96,7 +96,7 @@ public:
       return (HTREEITEM)::SendMessage (hwnd, TVM_INSERTITEM, 0, (LPARAM)&tvinsert);
    }
 
-   void pushNodes (eva2TreeStruct & aserro)
+   void pushNodes (eva2TreeStruct & aserro, bool shortpath, const string & separador)
    {
       vector<HTREEITEM> elevos;
 
@@ -107,6 +107,7 @@ public:
 
       for (int rr = 0; rr < aserro.eva.rows (); rr ++)
       {
+         printf ("  lina rr %d cols %d\n", rr, aserro.eva[rr].cols ());
          int cc = 0;
          while (++cc < aserro.eva[rr].cols ())
          {
@@ -140,8 +141,39 @@ public:
             // }
 
             HTREEITEM parent = elevos[elevos.size ()-1];
-            elevos.push_back (insertTo(parent, TEXT(aserro.eva[rr][cc].c_str ()), 0));
-            printf ("Insert node \"%s\" at depth %d\n",  aserro.eva[rr][cc].c_str (), elevos.size ());
+            
+            string nodostr = aserro.eva[rr][cc];
+            
+            if (shortpath) 
+            {
+               // short until end 
+               //     short = xxx2/xxx3/xxx4/... except the last node = leaf if
+               //
+               //          ..., xxx0, xxx1, xxx2, xxx3, xxx4, ...
+               //             ,     ,     , yyy1, yyy2
+               //
+               while (cc+2 < aserro.eva[rr].cols () && 
+                      (rr + 1 == aserro.eva.rows () || 
+                       cc >= aserro.eva[rr+1].cols () ||
+                       aserro.eva[rr+1][cc].length () > 0))
+               {
+                   printf ("  acorto at cc %d \"%s\"\n", (cc+1), aserro.eva[rr][1+cc].c_str ());
+                   nodostr += separador;
+                   nodostr += aserro.eva[rr][++cc];
+               }
+
+               // short start or middle
+               //     short = xxx0/xxx1/xxx2 if
+               //
+               //          ..., xxx0, xxx1, xxx2, xxx3, xxx4, ...
+               //             ,     ,     ,     , yyy2
+               //             ,     ,     ,     , yyy3
+               //             , yyy4, yyy5, 
+               //
+            }
+            
+            elevos.push_back (insertTo(parent, TEXT(nodostr.c_str ()), 0));
+            printf ("Insert node \"%s\" at depth %d\n",  nodostr.c_str (), elevos.size ());
          }
       }
    }

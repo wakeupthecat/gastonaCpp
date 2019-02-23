@@ -101,6 +101,14 @@ int WINAPI WinMain (HINSTANCE hInstance,
    static TCHAR szAppName[] = TEXT ("gastonaWinter");
    HWND         hwnd;
 
+   // HINSTANCE scin = LoadLibrary("SciLexer.dll");
+   // if (scin == NULL)
+   // {
+   //    TRACE (("TNor scintilla nor fan!"));
+   //    printf ("Nor scintilla nor fan!\n");
+   //    // MessageBox (hwinParent, "The Scintilla DLL could not be loaded.", "Error loading Scintilla", MB_OK | MB_ICONERROR);
+   // }
+   // else TRACE (("yesssss ....... We have SCINTILLA!!"));
 // typedef struct tagMSG {
 //    HWND   hwnd;
 //    UINT   message;
@@ -129,7 +137,7 @@ int WINAPI WinMain (HINSTANCE hInstance,
    separaParametros (szCmdLine, globalMainArguments);
    for (int pp = 0; pp < globalMainArguments.size (); pp++)
    {
-      printf ("arg[%d] = [%s]\n", pp, globalMainArguments[pp].c_str ());
+      TRACE (("arg[%d] = [%s]\n", pp, globalMainArguments[pp].c_str ()));
    }
    if (globalMainArguments.size () > 0)
       gastonaMainGastFile = globalMainArguments[0];

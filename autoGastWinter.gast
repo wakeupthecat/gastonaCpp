@@ -15,8 +15,9 @@
    <layout of partit>
          EVA, 4, 4, 3, 3
 
-          ,  X
-       X  ,  aSalo
+          ,  X       , X
+          , lArboreda, lEditor Scintilla
+       X  ,  aSalo, zIntollos
 
 
 #data#
@@ -55,6 +56,14 @@
       deu/stuttgart/stadmitte/vaquita
 
 
+      spain/barcelona/centre/gotic
+      spain/barcelona/eixample/clinic
+      spain/barcelona/eixample/casp
+      spain/barcelona/horta/guinardo/garriga i roca
+      spain/barcelona/sants/badal
+      spain/barcelona/sants/torrasa/mercat/ateneu/pis1
+      spain/barcelona/sants/torrasa/hospi/etc
+      
 #luaix#
 
    <main0>

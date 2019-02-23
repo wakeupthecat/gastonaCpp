@@ -20,6 +20,7 @@
 
 #include "zEditField.h"
 #include "zTextArea.h"
+#include "zScintillaBox.h"
 
 #include "EvaLayoutManager.h"
 #include "EvaFile.h"
@@ -132,6 +133,7 @@ public:
             case 'i': wiObj = new zTable (hwnd, winam, zTable::ASPECT_LIST); break;
             case 't': wiObj = new zTable (hwnd, winam, zTable::ASPECT_TABLE); break;
             case 'x': wiObj = new zTextArea (hwnd, winam); break;
+            case 'z': wiObj = new zScintillaBox (hwnd, winam); break;
             default:
                winam = "??" + winam;
                wiObj = new zLabel (hwnd, winam); break;
