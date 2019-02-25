@@ -23,19 +23,28 @@
 
 #listix#
 
-   <-- bCompile>
-      CALL, //@<:infile compilaWin.bat> 2> @<eDetailLog>
-          , ON BATCH, 1
-
    <main>
-      DB CONFIG, DEFAULT, outwin\derrors.db
+      <!DB CONFIG, DEFAULT, outwin\derrors.db
+      -->, eDetailLog data!,, @<:lsx tmp txt>
       LOAD, data, @<:sys user.home>/.gastonaLocal
+      LSX, compile
+
+   <-- bCompile>
+      LSX, compile
 
    <-- bRescan>
+      LSX, rescan
+
+   <compile>
+      CALL, //@<:infile compilaWin.bat> 2> @<eDetailLog>
+          , ON BATCH, 1
+      LSX, rescan
+
+   <rescan>
       -->, oConsolar clear
       LSX, parseErrors
       -->, iErrors data!, sqlSelect,   //SELECT fileName, line, lineNr AS lineAbs FROM msgErr
-      -->, iWarnings data!, sqlSelect, //SELECT fileName, line, lineNr AS lineAbs FROM msgWarn
+<!      -->, iWarnings data!, sqlSelect, //SELECT fileName, line, lineNr AS lineAbs FROM msgWarn
 
   <FILENAME_LINE_PATT_mingw> //^([^:]*):([^:]*):([^:]*):
 

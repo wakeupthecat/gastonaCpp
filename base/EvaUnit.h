@@ -84,10 +84,10 @@ class EvaUnit
    const string & getName () const { return Nombre; }
    int size ()   { return (int) mapUnit.size ();   }
    void setName (const string & name) { Nombre = name; }
-   bool containsEva (const string & name) 
-   { 
+   bool containsEva (const string & name)
+   {
       autoMap it = mapUnit.find (name);
-      return mapUnit.find (name) != mapUnit.end (); 
+      return mapUnit.find (name) != mapUnit.end ();
    }
 
    vector<string> & getEvaCatalog ()
@@ -113,7 +113,7 @@ class EvaUnit
    {
       return addEva (nova);
    }
-   
+
    void clear ()
    {
       mapUnit.clear ();

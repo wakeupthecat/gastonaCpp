@@ -1,6 +1,6 @@
 /*
 Eva library C++ (www.elxala.de)
-Copyright (c) 2006,2014 Alejandro Xalabarder Aulet
+Copyright (C) 2005-2019 Alejandro Xalabarder Aulet
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public

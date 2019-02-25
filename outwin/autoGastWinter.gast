@@ -1,0 +1,100 @@
+#javaj#
+
+   <frames>  main, gasWinter.gast, 500, 350
+
+   <layout of main>
+      EVALAYOUT, 10, 10, 5, 5
+       zzz,   200   ,   X
+          , bSabroson, ePasoto
+          , lLabello, tAmbrosia
+       X  , iRogelia, +
+       X  ,   +     , mTexto
+      200 , partit, -
+
+
+   <layout of partit>
+         EVA, 4, 4, 3, 3
+
+          ,  X       , X
+          , lArboreda, lEditor Scintilla
+       X  ,  aSalo, zIntollos
+
+
+#data#
+
+   <xTexto>
+      //Esto, en teoria, es una text area
+      //que tiene dos lineas
+      //
+
+   <lLabello> LABEL DE PROVA
+
+   <!   <tAmbrosia visibleColumns> name, description
+   <tAmbrosia>
+    "#(99)", Id, name, date, description
+    " 5",7712, Ricahardo, 2013.02.22, //Mano de obra barata donde la haya
+    " 6",1154, Lisabondia, 1980.01.10, //Se va a la ant·rtida, ya veremos...
+    44,7781, Umbramerta, 1992.02.22, //Se matricula
+
+
+   <aSalo>
+      node, icon,
+
+      cat/barna/eixample/clinic
+      cat/barna/eixample/casp
+      cat/barna/eixample/sagrada familia
+      cat/barna/horta/guinardo/garriga i roca
+      cat/barna/horta/guinardo/avinguda montserrat
+      cat/barna/horta/clot/estacio
+      deu/dresden/neustadt/talstrasse
+      deu/dresden/neustadt/nikki faktur
+      deu/dresden/altstadt/Groﬂer Garten
+      deu/dresden/altstadt/Johhanstadt
+      deu/stuttgart/nord/stammheim/zikadenweg
+      deu/stuttgart/nord/stammheim/weichtuch
+      deu/stuttgart/stadmitte/nesenbachstr
+      deu/stuttgart/stadmitte/vaquita
+
+      spain/barcelona/centre/gotic
+      spain/barcelona/eixample/clinic
+      spain/barcelona/eixample/casp
+      spain/barcelona/horta/guinardo/garriga i roca
+      spain/barcelona/sants/badal
+      spain/barcelona/sants/torrasa/mercat/ateneu/pis1
+      spain/barcelona/sants/torrasa/hospi/etc
+      
+   <zIntollos>
+      //Hole peazo de
+      //SENTOLLO!
+      
+   <zIntollos fileName> ../win/zButton.h
+
+
+#luaix#
+
+   <main0>
+      //print "here we are LUAIX!"
+
+   <main>
+      //print "estaunlich LUIX!!!"
+
+   <-- bSabroson>
+      //print "HEI Boto·s!"
+      
+   <-- zIntollos>
+      //print "Imp-presionante"
+
+   <-- ePasoto>
+      //function factorial(n)
+      //   if n == 0 then
+      //      return 1
+      //   else
+      //      return n * factorial(n - 1)
+      //   end
+      //end
+      //
+      // print "Calculation of 5!"
+      // print (factorial(5))
+      // print "Yatans!"
+
+#**FI#

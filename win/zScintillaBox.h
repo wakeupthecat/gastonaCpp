@@ -20,6 +20,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef zSCINTILLABOX_HEADER_H
 #define zSCINTILLABOX_HEADER_H
 
+#include <richedit.h> // for TEXTRANGE structure (?)
+
 #include "zWidget.h"
 #include "Mensaka.h"
 #include "Scintilla.h"
@@ -32,10 +34,16 @@ class zScintillaBox : public zWidget, public MensakaTarget
 public:
    enum
    {
-      UPDATE_DATA
+      UPDATE_DATA,
+      MAX_BUFF_SIZE = 4*1024,
    };
 
-   zScintillaBox (HWND hwinParent, const string & pname): zWidget(pname)
+   const COLORREF C_BLACK = RGB(0,0,0);
+   const COLORREF C_WHITE = RGB(0xff,0xff,0xff);
+   
+   bool mIsDirty;
+
+   zScintillaBox (HWND hwinParent, const string & pname): zWidget(pname), mIsDirty (false)
    {
       static HINSTANCE scin = LoadLibrary("SciLexer.dll");
       if (scin == NULL)
@@ -65,12 +73,33 @@ public:
 
       Mensaka::subscribeToMessage (getName () + " data!", UPDATE_DATA, this);
 
-      SendMessage(hwnd, SCI_CREATEDOCUMENT, 0, 0); /* 2375 */
+      SendEditor (SCI_CREATEDOCUMENT);
+      SendEditor (SCI_SETTABWIDTH, 3);
+      SendEditor (SCI_SETUSETABS, 0);
+
+      SetAStyle(STYLE_DEFAULT, C_BLACK, C_WHITE, 11, "Consolas");
+      SendEditor(SCI_STYLECLEARALL);	// Copies global style to all others
       // setFontBig ();
+      updateData ();
    }
 
    ~zScintillaBox ()
    {
+   }
+
+	LRESULT SendEditor(UINT Msg, WPARAM wParam=0, LPARAM lParam=0)
+   {
+      return SendMessage(hwnd, Msg, wParam, lParam);
+	}
+
+   void SetAStyle (int style, COLORREF fore, COLORREF back, int size = 0, const char *face = 0)
+   {
+      SendEditor(SCI_STYLESETFORE, style, fore);
+      SendEditor(SCI_STYLESETBACK, style, back);
+      if (size >= 1)
+         SendEditor(SCI_STYLESETSIZE, style, size);
+      if (face)
+         SendEditor(SCI_STYLESETFONT, style, reinterpret_cast<LPARAM>(face));
    }
 
 
@@ -88,39 +117,139 @@ public:
 
    void updateData ()
    {
-      //string value = getAttribute ("").getValue ();
-      //setText (value);
-      Eva & etext = getAttribute ("");
-
-      string stext = "";
-      for (int ii = 0; ii < etext.rows (); ii ++)
-         stext += etext.getValue (ii) + "\n";
-
-      setText (stext);
+      if (hasAttribute ("fileName"))
+      {
+         loadFile (getAttributeAsText ("fileName").c_str ());
+      }
+      else
+      {
+         setText (getAttributeAsText (""));
+      }
    }
 
+   void resetEditor ()
+   {
+      SendEditor(SCI_CLEARALL);
+      SendEditor(EM_EMPTYUNDOBUFFER);
+      mIsDirty = false;
+      SendEditor(SCI_SETSAVEPOINT);
+   }
+
+   void loadFile (const char * fileName)
+   {
+      TRACE (("loading file %s ...", fileName));
+      resetEditor ();
+      SendEditor(SCI_CANCEL);
+      SendEditor(SCI_SETUNDOCOLLECTION, 0);
+
+      FILE * fp = fopen(fileName, "rb");
+      if (fp != NULL)
+      {
+         char data[MAX_BUFF_SIZE+1];
+         int len = 0;
+         do {
+            len = fread (data, 1, sizeof(data), fp);
+            TRACE (("%creading %d bytes of data ...", 10, len));
+            SendEditor(SCI_ADDTEXT, len, reinterpret_cast<LPARAM>(static_cast<char *>(data)));
+         } while (len > 0);
+         fclose(fp);
+      }
+      else
+      {
+         TRACE (("Could not open file [\"%s\"]", fileName));
+      }
+      SendEditor(SCI_SETUNDOCOLLECTION, 1);
+      // ::SetFocus(hwnd);
+      SendEditor(EM_EMPTYUNDOBUFFER);
+      SendEditor(SCI_SETSAVEPOINT);
+      SendEditor(SCI_GOTOPOS, 0);
+   }
+
+   void getRangeText (int start, int end, char *text)
+   {
+      TEXTRANGE tr;
+      tr.chrg.cpMin = start;
+      tr.chrg.cpMax = end;
+      tr.lpstrText = text;
+      SendEditor(EM_GETTEXTRANGE, 0, reinterpret_cast<LPARAM>(&tr));
+   }
+
+   void saveFile (const char *fileName)
+   {
+      FILE *fp = fopen(fileName, "wb");
+      if (fp) 
+      {
+         char data[MAX_BUFF_SIZE + 1];
+         int lengthDoc = SendEditor(SCI_GETLENGTH);
+         for (int ii = 0; ii < lengthDoc; ii += MAX_BUFF_SIZE) 
+         {
+            int grabSize = lengthDoc - ii;
+            if (grabSize > MAX_BUFF_SIZE)
+               grabSize = MAX_BUFF_SIZE;
+            getRangeText (ii, ii + grabSize, data);
+            fwrite(data, grabSize, 1, fp);
+         }
+         fclose(fp);
+         SendEditor(SCI_SETSAVEPOINT);
+      } 
+      else 
+      {
+         TRACE (("Could not save file [\"%s\"]", fileName));
+      }
+   }
+   
    void vuelcaData ()
    {
-      int len = GetWindowTextLength (getNativeHandle ());
-      TCHAR * pVarName = (TCHAR *) calloc (len + 3, sizeof (TCHAR));
-      if (pVarName)
-         pVarName[len] = 0;
-
-      GetWindowText(getNativeHandle (), pVarName, len+1);
-
-      // set the variable with the current control content
-      getAttribute ("", true).setValue (string (pVarName));
-
-      //printf ("currito es [%s]\n", getAttribute("").getValue().c_str ());
-      free (pVarName);
+      // int len = GetWindowTextLength (getNativeHandle ());
+      // TCHAR * pVarName = (TCHAR *) calloc (len + 3, sizeof (TCHAR));
+      // if (pVarName)
+      //    pVarName[len] = 0;
+      //
+      // GetWindowText(getNativeHandle (), pVarName, len+1);
+      //
+      // // set the variable with the current control content
+      // getAttribute ("", true).setValue (string (pVarName));
+      //
+      // //printf ("currito es [%s]\n", getAttribute("").getValue().c_str ());
+      // free (pVarName);
    }
 
    virtual void winMessage (HWND hwin, int winHiWord)
    {
-      if (winHiWord == WM_KILLFOCUS || winHiWord == EN_KILLFOCUS)
+      switch (winHiWord)
       {
-         // losing focus, so revert current value (text) to data
-         vuelcaData ();
+         case WM_KILLFOCUS:
+         case EN_KILLFOCUS:
+            // losing focus, so revert current value (text) to data
+            vuelcaData ();
+            break;
+
+         case SCN_SAVEPOINTREACHED:
+            mIsDirty = false;
+            break;
+
+         case SCN_SAVEPOINTLEFT:
+            mIsDirty = true;
+            break;
+
+         case SCN_UPDATEUI:
+            {
+               int selectSize = SendEditor (SCI_GETSELECTIONEND) - SendEditor (SCI_GETSELECTIONSTART);
+               if (selectSize <= MAX_BUFF_SIZE)
+               {
+                  char selBuffer[MAX_BUFF_SIZE+1];
+                  // getset the variable with the current control content
+                  SendEditor (SCI_GETSELTEXT, 0, selBuffer);
+
+                  // set the variable with the current control content
+                  getAttribute ("selected", true).setValue (string (selBuffer));
+                  Mensaka::sendPacket (getName (), getDataAndControl ());
+               }
+            }
+            break;
+
+         default:
+            break;
       }
    }
 
@@ -134,7 +263,7 @@ public:
 
    void setText (const string & value)
    {
-      //SetWindowTextA  (getNativeHandle (), value.c_str ());
+      SendEditor (SCI_SETTEXT, 0, value.c_str ());
    }
 };
 

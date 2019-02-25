@@ -1,0 +1,139 @@
+#javaj#
+
+   <layout of main>
+      EVA,
+
+         , X
+         , layOptionsBar
+       X , cont3
+
+   <layout of layOptionsBar>
+      EVA , 1, 1, 11, 1
+          ,             , X,
+          , rgTheme, rgWhenSelect,
+
+   <layout of cont1>
+      EVA, 4, 4, 4, 4
+
+         , X
+       22, lEdi0, bOpen0
+       X , zEdi0, -
+
+   <layout of cont2>
+      EVA, 4, 4, 4, 4
+
+         , X    ,       , X
+       22, lEdi0, bOpen0, lEdi1, bOpen1
+       X , zEdi0, -     , zEdi1, -
+
+   <layout of cont3>
+      EVA, 4, 4, 4, 4
+
+         , X    ,       , X
+       22, lEdi0, bOpen0, lEdi1, bOpen1
+       X , zEdi0, -     , zEdi1, -
+       22, +    ,       , lEdi2, bOpen2
+       X , +    ,       , zEdi2, -
+
+   <layout of cont4>
+      EVA, 4, 4, 4, 4
+
+         , X    ,       , X
+       22, lEdi0, bOpen0, lEdi1, bOpen1
+       X , zEdi0, -     , zEdi1, -
+       22, lEdi2, bOpen2, lEdi3, bOpen3
+       X , zEdi2, -     , zEdi3, -
+
+   <layout of cont5>
+      EVA, 4, 4, 4, 4
+
+         , X    ,       , X
+       22, lEdi0, bOpen0, lEdi1, bOpen1
+       X , zEdi0, -     , zEdi1, -
+       22, lEdi2, bOpen2, lEdi3, bOpen3
+       X , zEdi2, -     , zEdi3, -
+       22, +    ,       , lEdi4, bOpen4
+       X , +    ,       , zEdi4, -
+
+   <layout of cont6>
+      EVA, 4, 4, 4, 4
+
+         , X    ,       , X
+       22, lEdi0, bOpen0, lEdi1, bOpen1
+       X , zEdi0, -     , zEdi1, -
+       22, lEdi2, bOpen2, lEdi3, bOpen3
+       X , zEdi2, -     , zEdi3, -
+       22, lEdi4, bOpen4, lEdi5, bOpen5
+       X , zEdi4, -     , zEdi5, -
+
+   <layout of layAnota>
+      EVA, 16, 16, 13, 13
+
+         ,  , X, , X
+         , eNode, --
+         , eLoc, --
+         , eMessage, --
+         , lSource, eSource, lTarget, eTarget
+      100, xDesc, --
+         , bStoreAnnotation, -, , bCancel
+
+#data#
+
+   <bOpen0> ""
+   <bOpen1> ""
+   <bOpen2> ""
+   <bOpen3> ""
+   <bOpen4> ""
+   <bOpen5> ""
+
+   <rgWhenSelect orientation> X
+   <rgWhenSelect titledBorder> On select
+   <rgWhenSelect>
+      label      , mode, selected
+      Search     , search, 1
+      Annotate   , annotate, 0
+      ctagSearch , ctagSearch, 0
+
+   <rgTheme orientation> X
+   <rgTheme titledBorder> Theme
+   <rgTheme>
+      label      , colors  , selected
+      clar       , clar    , 0
+      desert     , dunes   , 0
+      clear      , fusta   , 0
+      contrast   , sang    , 0
+      dark       , cafeto  , 0
+      dark2      , dark    , 0
+      dark3      , dark1   , 1
+
+#listix#
+
+   <-- bOpen0> //showAllMatchedOf (0)
+   <-- bOpen1> //showAllMatchedOf (1)
+   <-- bOpen2> //showAllMatchedOf (2)
+   <-- bOpen3> //showAllMatchedOf (3)
+   <-- bOpen4> //showAllMatchedOf (4)
+   <-- bOpen5> //showAllMatchedOf (5)
+
+   <-- rgTheme>
+      //changeThemeAll (getDataCell ("rgTheme selected.colors"));
+      //AJAXSend ("lastTheme", "theme="+getDataCell ("rgTheme selected.colors"));
+
+   <-- rgWhenSelect>
+      //setSelectionMode (getDataCell ("rgWhenSelect selected.mode"));
+
+   <-- bStoreAnnotation>
+      //AJAXSend ("saveAnnotation");
+
+   <-- ajaxResponse saveAnnotation>
+      //mensaka ("endAnnotation");
+
+   <-- bCancel>
+      //mensaka ("endAnnotation");
+
+   <-- endAnnotation>
+      //setData ("eMessage", "");
+      //setData ("eSource", "");
+      //setData ("eTarget", "");
+      //setData ("xDesc", "");
+      //unmask ("main");

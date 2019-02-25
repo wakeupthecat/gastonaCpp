@@ -1,5 +1,5 @@
 /*
-Gastona C++ 
+Gastona C++
 Copyright (C) 2016-2019  Alejandro Xalabarder Aulet
 
 This library is free software; you can redistribute it and/or
@@ -145,6 +145,11 @@ public:
    EvaUnit &      getControlUnit () { return getDataAndControl (); }
    bool           isNIL ()          { return name.length() == 0; } // in the desert a zWidget without name (Chicago)
 
+   bool hasAttribute (const string & attName)
+   {
+      return false == EvaUnit::isNILEva (getAttribute (attName));
+   }
+
    /**
       gets the Eva variable attribute with name 'attName' from the widget
       the container must exist, if the Eva variable still does not exists a null is returned.
@@ -185,6 +190,15 @@ public:
       return eva2;
    }
 
+   string getAttributeAsText (const string & attName, bool force = false)
+   {
+      Eva & etext = getAttribute (attName);
+
+      string stext = etext.getValue (0);
+      for (int ii = 1; ii < etext.rows (); ii ++)
+         stext += "\n" + etext.getValue (ii);
+      return stext;
+   }
 
    // used by message "data!"
    //

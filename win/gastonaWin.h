@@ -37,6 +37,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "zEditField.h"
 #include "zTextArea.h"
 #include "zScintillaBox.h"
+#include "zScintillaDemo.h"
 
 #include "EvaLayoutManager.h"
 #include "EvaFile.h"
@@ -150,6 +151,7 @@ public:
             case 't': wiObj = new zTable (hwnd, winam, zTable::ASPECT_TABLE); break;
             case 'x': wiObj = new zTextArea (hwnd, winam); break;
             case 'z': wiObj = new zScintillaBox (hwnd, winam); break;
+            case 'm': wiObj = new zScintillaDemo (hwnd, winam); break;
             default:
                winam = "??" + winam;
                wiObj = new zLabel (hwnd, winam); break;

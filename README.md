@@ -23,6 +23,7 @@ and for GastonaC++ pros (lack of in java)
       + Native support of sqlite (included in code)
       + Native support of Lua (included in code)
       + Extensible using C/C++ and Lua
+      + Edit component Scintilla (very serious editor, i.e. Notepad++)
 
 Both are multiplataform since gastonaC++ is compiled with gcc using Win Api for windows
 and Gtk for both windows and Linux. Right now Android is not in focus of gastonaC++ but it should
@@ -58,7 +59,8 @@ EvaLayout manager exists already in C++ with composition and mask mechanism
 so many GUI dialogs can be written just using this powerful layout. Later 
 can be added other kind of layout containers like splitters, tabs and menues etc.
 
-Of course we need a minimum set of zWidgets in both versions with similar or better functionality as the counterparts in java. While this seems to me an easy task in Gtk, as I learn it, it will be ardous in Windows, I guess.
+Add more widgets and improve its functionality.
+
 
 ### Logic
 
@@ -74,11 +76,10 @@ gastonaC++ in both architectures WinApi and Gtk linux. Having following initial 
 
       - Skeleton of gastona that read the gast file and loads the GUI and the logic
       - Evalayout with composition and masking
-      - Set of inital zWidgets
+      - Set of initial zWidgets including buttons, lists, tables, trees and Scintilla editor
       - Implementation of #javaj# unit, creating, layouting and handling the widgets
       - Included Lua version 5.3.4
       - Logic build in lua taken from the script unit #luaix# that react to "main0", "main" and all messages defined on it
       - Included Sqlite based on the original sqlite 3.24.0 plus few modifications
-        that can be used (all functionality as the original command line or shell.c)
 
 See WinGastonaCNotes.mktes and GtkGastonaCNotes.mktes for specific details and build instructions.

@@ -1,6 +1,6 @@
 /*
 Eva library C++ (www.elxala.de)
-Copyright (C) 2005-2017 Alejandro Xalabarder Aulet
+Copyright (C) 2005-2019 Alejandro Xalabarder Aulet
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -171,14 +171,14 @@ public:
    {
       return copyValue (row, col);
    }
-   
+
    string copyValue (int row = 0, int col = 0)
    {
       if (row < rows () && col < lis_EvaLine [row].size ())
       {
          return lis_EvaLine [row][col];
       }
-      
+
       return string ();
    }
 
