@@ -82,7 +82,7 @@ protected:
       //#define LVS_EX_GRIDLINES        0x00000001
       //#define LVS_EX_SUBITEMIMAGES    0x00000002
       //#define LVS_EX_CHECKBOXES       0x00000004
-      //#define LVS_EX_TRACKSELECT      0x00000008
+      //#define LVS_EX_TRACKSELECT      0x00000008  <<<< remove this from the 4th parameter!
       //#define LVS_EX_HEADERDRAGDROP   0x00000010
       //#define LVS_EX_FULLROWSELECT    0x00000020
       //#define LVS_EX_ONECLICKACTIVATE 0x00000040
@@ -92,13 +92,12 @@ protected:
       SendMessage (hwnd,
                    (LVM_FIRST + 54) /* LVM_SETEXTENDEDLISTVIEWSTYLE */,
                    0,
-                   0x00000020 | 0x00000008 | (isList () ? 0x0 : 0x00000001 | 0x00000010)); /* LVS_EX_FULLROWSELECT | LVS_EX_TRACKSELECT | LVS_EX_GRIDLINES | LVS_EX_HEADERDRAGDROP */
+                   0x00000020 | (isList () ? 0x0 : 0x00000001 | 0x00000010)); /* LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_HEADERDRAGDROP */
       // TODO
-      //    Todavía hay efectos indeseados en la selección de ListView
-      //    1) solo posicionar el cursor se marca toda la linea, esto NO la selecciona (OK) pero DES-SELECCIONA TODAS
-      //       las que estaban seleccionadas!!
-      //    2) si hay una multiselección al cambiar el focus a otra tabla o lista y seleccionar en esta
-      //       DESAPARECE VISUALMENTE LA SELECCION DE LA PRIMERA TABLA!!! aunque cuando se vuelve ésta vuelve !?!?!?!
+      //    Still there is an unwanted effect regarding with the ListView selection
+      //    On changing the focus to another widget (e.g. another list) the selected rows from the original one
+      //    disappears! although it seems they are still selected
+      //
       Mensaka::subscribeToMessage (getName () + " data!", UPDATE_DATA, this);
       Mensaka::subscribeToMessage (getName () + " select!", SELECT_ROWS, this);
    }
@@ -170,25 +169,9 @@ protected:
       //LVN_BEGINLABELEDIT
 
       // detect row selection when click : winCode == NM_DBLCLK || winCode == NM_CLICK
-      // with cursor ?? winCode == -155 || winCode == -101
-
-      // winCode == LVN_COLUMNCLICK no chuta ...
-      // if (winCode == NM_DBLCLK || winCode == NM_CLICK || winCode == LVN_COLUMNCLICK || winCode == -155 || winCode == -101)
-
-      if (winCode == NM_DBLCLK || winCode == NM_CLICK || winCode == -101)
+      // with cursor ?? winCode == -12
+      if (winCode == NM_DBLCLK || winCode == NM_CLICK || winCode == -12)
       {
-         // workaroud to avoid multiple selection with winCode -101 !
-         //
-         static long long started_selection = 0;
-         if (traceCrono.getMillisecondsFromStart () - started_selection < 60)
-         {
-            // second event in 60 ms ? => it must be from same selection ...
-            //TRACE (("False selection event %d ignored elapsos %lld !", winCode, traceCrono.getMillisecondsFromStart () - started_selection ));
-            return;
-         }
-         started_selection = traceCrono.getMillisecondsFromStart ();
-         // end workaround
-
          actionSelection ();
 
          //printf ("hemos seleccionado algo %d\n", winCode);
@@ -198,7 +181,7 @@ protected:
       }
       else
       {
-         TRACE (("zTable cannot handle winCode %d !", winCode));
+         TRACE (("zTable cannot handle winCode %d!", winCode));
       }
    }
 
