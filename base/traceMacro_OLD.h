@@ -23,15 +23,34 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <chrono>
 
-#define printAppTime { printf("\n%8.3f ", traceCrono.getMillisecondsFromStart () / 1000.); }
+#ifndef WIN32
+
+#include <sys/time.h>
+
+#define printAppTime { \
+   timeval tv; \
+   gettimeofday(&tv, NULL);  \
+   printf("\n%8.3f (M) ", (float)(tv.tv_sec - tvSTART.tv_sec) + 0.000001f*(tv.tv_usec - tvSTART.tv_usec)); \
+}
+
+#else
+
+// do not print time if MS VC++ compiler
+// see https://social.msdn.microsoft.com/Forums/windowsdesktop/en-US/674d34c9-b6f6-4380-bc7b-181eae99847a/timeval-struct-incorrect?forum=windowssdk
+#define timeval int
+
+#define printAppTime { printf ("\n"); }
+#define gettimeofday(p,t)
+
+#endif // WIN32
 
 #define DBG_ON 1
 #define DBG_LEVEL_1
 #define DBG_LEVEL_2_NO
 
 #define TRACE(x) do { if (DBG_ON) { printAppTime printf x; } } while (0)
+#define TRACERROR(x) do { printAppTime printf(" ERROR: "); printf x; } while (0)
 #define TRACE_ERR(x) do { printAppTime printf(" ERROR: "); printf x; } while (0)
 
 #ifdef DBG_LEVEL_1
@@ -46,24 +65,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
    #define TRACE2(x) do { } while (0)
 #endif
 
-struct cronos_class
-{
-   long long getMillisecondsFrom1970 ()
-   {
-      auto ara = std::chrono::system_clock::now();
-      auto milli = std::chrono::duration_cast<std::chrono::milliseconds>(ara.time_since_epoch()).count();
-      return milli;
-   }
-
-   static long long getMillisecondsFromStart ()
-   {
-      static auto start = std::chrono::system_clock::now();
-      auto milli = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start).count();
-      return milli;
-   }
-};
-struct cronos_class traceCrono;
-
+static timeval tvSTART;
 
 #endif
 

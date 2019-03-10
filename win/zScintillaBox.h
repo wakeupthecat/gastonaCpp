@@ -119,6 +119,7 @@ public:
    {
       if (hasAttribute ("fileName"))
       {
+         TRACE (("FILENAME: [%s]", getAttribute ("fileName").toString ().c_str ()));
          loadFile (getAttributeAsText ("fileName").c_str ());
       }
       else
@@ -234,6 +235,8 @@ public:
 
          case SCN_UPDATEUI:
             {
+               //:seq zwidgets zScintillaBox scintilla << selected text changed
+               //
                int selectSize = SendEditor (SCI_GETSELECTIONEND) - SendEditor (SCI_GETSELECTIONSTART);
                if (selectSize <= MAX_BUFF_SIZE)
                {

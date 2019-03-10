@@ -41,8 +41,6 @@ EvaLayoutManager::EvaLayoutManager ():
    arrLayWidgets (),
    arrPtrLayouts ()
 {
-  gettimeofday (&tvSTART, NULL);
-  TRACE (("EvaLayoutManager debug messages on"));
 }
 
 void EvaLayoutManager::setLayouts (EvaUnit & allLayouts)
@@ -100,7 +98,7 @@ string EvaLayoutManager::doYouMean (const string & namewanted)
 
       if (!circularCtrl.checkPushable (nameMask))
       {
-         TRACERROR (("masks for %s found circular!", namewanted.c_str ()));
+         TRACE_ERR (("masks for %s found circular!", namewanted.c_str ()));
          return namewanted;
       }
       circularCtrl.push (nameMask);
@@ -134,7 +132,7 @@ void EvaLayoutManager::doShowByNameAt (const string & oname, int x0, int y0, int
       //check no endless recursion
       if (! showingStack.checkPushable (rename))
       {
-         TRACERROR (("doShowByNameAt error recursive show %s!!", rename.c_str ()));
+         TRACE_ERR (("doShowByNameAt error recursive show %s!!", rename.c_str ()));
          return;
       }
 
@@ -148,7 +146,7 @@ void EvaLayoutManager::doShowByNameAt (const string & oname, int x0, int y0, int
       return;
    }
 
-   TRACERROR (("doShowByNameAt don't know what to show!! %s %d %d %d x %d!!", rename.c_str (), x0, y0, dx, dy));
+   TRACE_ERR (("doShowByNameAt don't know what to show!! %s %d %d %d x %d!!", rename.c_str (), x0, y0, dx, dy));
 }
 
 // main method doShowLayout
@@ -411,7 +409,7 @@ void EvaLayoutManager::EvaLayout::doShowAt(int x0, int y0, int totWidth, int tot
             {
                 if (pp < Hdims.size())
                    dx += Hgap + Hdims[pp].length + (int)(Hdims[pp].extraProp * totalExtraH);
-                else TRACERROR(("inconsistent layout horizontal information for widget %s, col %d but num of cols is %l", getName().c_str(), pp, Hdims.size()));
+                else TRACE_ERR(("inconsistent layout horizontal information for widget %s, col %d but num of cols is %l", getName().c_str(), pp, Hdims.size()));
             }
             pp = wi.cellPos.y;
             pp2 = wi.cellPos.dy == -1 ? Vdims.size()-1: wi.cellPos.dy;
@@ -420,7 +418,7 @@ void EvaLayoutManager::EvaLayout::doShowAt(int x0, int y0, int totWidth, int tot
             {
                 if (pp < Vdims.size())
                     dy += Vgap + Vdims[pp].length + (int)(Vdims[pp].extraProp * totalExtraV);
-                else TRACERROR(("inconsistent layout vertical information for widget %s, row %d but num of rows is %l", getName().c_str(), pp, Vdims.size()));
+                else TRACE_ERR(("inconsistent layout vertical information for widget %s, row %d but num of rows is %l", getName().c_str(), pp, Vdims.size()));
             }
 
             if (x0+x < 0 || y0 + y < 0 || dx < 0 || dy < 0) continue;

@@ -61,7 +61,7 @@ public:
    {
       if (mappedMsg == UPDATE_DATA)
       {
-         printf ("mira var[%s] val[%s]\n", params.size () > 1 ? params[0].c_str ():"?", params.size () > 1 ? params[1].c_str ():"?");
+         TRACE2 (("mira var[%s] val[%s]\n", params.size () > 1 ? params[0].c_str ():"?", params.size () > 1 ? params[1].c_str ():"?"));
          setVariablesFromArray (params);
          updateData ();
          return true;

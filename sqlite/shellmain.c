@@ -15949,10 +15949,11 @@ int SQLITE_CDECL shellmain(int argc, wchar_t **wargv){
   char **argvToFree = 0;
   int argcToFree = 0;
 #endif
+  int ii;
 
   {  
      printf ("gastonaC@sqlite3/shellmain v0.0 2018.07.22 %d pars:\n", argc);
-     for (int ii = 0; ii < argc; ii ++)
+     for (ii = 0; ii < argc; ii ++)
          printf ("%d) [%s]\n", ii, argv[ii]);
   }
    

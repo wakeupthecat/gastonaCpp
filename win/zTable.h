@@ -169,8 +169,26 @@ protected:
       //LVN_ENDLABELEDIT
       //LVN_BEGINLABELEDIT
 
-      if (winCode == NM_DBLCLK || winCode == NM_CLICK)
+      // detect row selection when click : winCode == NM_DBLCLK || winCode == NM_CLICK
+      // with cursor ?? winCode == -155 || winCode == -101
+
+      // winCode == LVN_COLUMNCLICK no chuta ...
+      // if (winCode == NM_DBLCLK || winCode == NM_CLICK || winCode == LVN_COLUMNCLICK || winCode == -155 || winCode == -101)
+
+      if (winCode == NM_DBLCLK || winCode == NM_CLICK || winCode == -101)
       {
+         // workaroud to avoid multiple selection with winCode -101 !
+         //
+         static long long started_selection = 0;
+         if (traceCrono.getMillisecondsFromStart () - started_selection < 60)
+         {
+            // second event in 60 ms ? => it must be from same selection ...
+            //TRACE (("False selection event %d ignored elapsos %lld !", winCode, traceCrono.getMillisecondsFromStart () - started_selection ));
+            return;
+         }
+         started_selection = traceCrono.getMillisecondsFromStart ();
+         // end workaround
+
          actionSelection ();
 
          //printf ("hemos seleccionado algo %d\n", winCode);
@@ -178,8 +196,10 @@ protected:
          string msg = getName () + (winCode == NM_DBLCLK ? " 2": "");
          Mensaka::sendPacket (getName (), getDataAndControl ()); // p.e. --> tTable
       }
-      //else
-      //   printf ("QUE ES ETO!! %d\n", winCode);
+      else
+      {
+         TRACE (("zTable cannot handle winCode %d !", winCode));
+      }
    }
 
 
@@ -236,7 +256,7 @@ protected:
          col.cx = width [cc] < 1 ? -1: widthForText (width [cc]);
          col.pszText = (LPSTR) colNames[cc].c_str ();
          col.iSubItem = cc;
-         printf ("colname (%s) de width %d\n", colNames[cc].c_str(), col.cx);
+         TRACE2 (("colname (%s) de width %d\n", colNames[cc].c_str(), col.cx));
          ListView_InsertColumn (hwnd, cc, & col);
          if (isList () && width[cc] > 0)
          {

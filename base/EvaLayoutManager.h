@@ -80,7 +80,7 @@ struct uniqueTextStack
       if (lastIndx >= 0)
       {
          if (textStack[lastIndx] != lastValue)
-            printf ("uniqueTextStack error broken show stack at %s!!\n", lastValue.c_str ());
+            TRACE_ERR (("uniqueTextStack error broken show stack at %s!!\n", lastValue.c_str ()));
          else
             textStack.resize (lastIndx);
       }

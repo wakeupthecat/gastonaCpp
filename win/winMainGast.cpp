@@ -48,9 +48,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
 
-#include "GastonaWin.h"
-#include "EvaLayoutManager.cpp"
-#include "LogicController.cpp"
+// #include "GastonaWin.h"
+// #include "EvaLayoutManager.cpp"
+// #include "LogicController.cpp"
 
 
 using namespace std;
@@ -164,9 +164,7 @@ int WINAPI WinMain (HINSTANCE hInstance,
       TranslateMessage (&msg);
       if (msg.message == WM_KEYDOWN && msg.wParam == VK_RETURN)
          capturado = gaston.broadcastKey (msg.hwnd, msg.message, msg.wParam);
-         //printf ("mereces mi atención RETURN! hdw %u\n", msg.hwnd);
 
-       //printf ("contriollio hdw %ud, messaka %ud\n", msg.hwnd, msg.message);
        if (!capturado)
          DispatchMessage (&msg);
    }
@@ -189,6 +187,7 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 
       case WM_CREATE:
          {
+            TRACE (("gastona start stamp: %lld", traceCrono.getMillisecondsFrom1970 () ));
             if (gaston.loadGUI (hwnd, gastonaMainGastFile.c_str ()))
             {
                // main frame, note that it can be named different from "main"!
@@ -199,7 +198,6 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
             gaston.showLayout (hwnd, true);
             uniRect mango = gaston.getPreferredSizeOfMain ();
             TRACE (("preferred size main %d, %d", mango.dx, mango.dy ));
-            // printf ("PREFERRED size main %d, %d", mango.dx, mango.dy );
           }
          break;
 

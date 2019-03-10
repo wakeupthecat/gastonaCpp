@@ -1,1 +1,1 @@
-g++ -fpermissive -static -Ibase -Iinclude -Iwin -Ilua-5.3.4\src -o outwin\gastonaW.exe win/winMainGast.cpp outwin\liblua.a outwin\shellmain.o outwin\sqlite3.o -l gdi32
+g++ -std=c++11 -fpermissive -static -Ibase -Iinclude -Iwin -Ilua-5.3.4\src -o outwin\gastonaW.exe win/product_gastonaWin.cpp outwin\liblua.a outwin\shellmain.o outwin\sqlite3.o -l gdi32

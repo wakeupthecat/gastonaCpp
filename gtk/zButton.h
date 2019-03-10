@@ -29,13 +29,13 @@ public:
       // notify to click of native gtkk widget
       // we have to provide the static fucntion, so we will pass this as parameter
       // to be able to receive it finally in the object
-      gtk_signal_connect (GTK_OBJECT (hwnd), 
-                          "clicked", 
-                          GTK_SIGNAL_FUNC (zButton::static_clicked_callback), 
+      gtk_signal_connect (GTK_OBJECT (hwnd),
+                          "clicked",
+                          GTK_SIGNAL_FUNC (zButton::static_clicked_callback),
                           this);
 
       //gtk_container_add (GTK_CONTAINER (hwinParent), hwnd);
-                          
+
       //setText (const string & value);
       Mensaka::subscribeToMessage (getName () + " data!", MSK_UPDATE_DATA, this);
    }
@@ -54,7 +54,7 @@ public:
    {
       if (mappedMsg == MSK_UPDATE_DATA)
       {
-         printf ("mira var[%s] val[%s]\n", params.size () > 1 ? params[0].c_str ():"?", params.size () > 1 ? params[1].c_str ():"?");
+         TRACE2 (("mira var[%s] val[%s]\n", params.size () > 1 ? params[0].c_str ():"?", params.size () > 1 ? params[1].c_str ():"?"));
          setVariablesFromArray (params);
          updateData ();
          return true;
@@ -85,9 +85,9 @@ public:
       //
       //g_object_set_data (G_OBJECT(hwnd), "char", (gpointer) value.c_str ());
    }
-   
+
    // gtk callback, it has to be a static method
-   // data will be the pointer to the object that 
+   // data will be the pointer to the object that
    // has been actually clicked
    static void static_clicked_callback (GtkWidget * button, gpointer* data)
    {

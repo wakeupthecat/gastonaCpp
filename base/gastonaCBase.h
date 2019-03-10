@@ -146,7 +146,7 @@ public:
             }
             else
             {
-               // print ("error: Layout type %s not supported!", elay[0][0]);
+               TRACE_ERR (("error: Layout type %s not supported!", elay[0][0].c_str ()));
             }
          }
       }
@@ -194,7 +194,6 @@ public:
       }
    }
 
-
    bool loadGast (const string & gastFileName)
    {
       // loading the entire gast file in memory
@@ -211,7 +210,7 @@ public:
       // loading listix logic (lua)
       //
       theListix.load (wastEvafile["luaix"], wastEvafile["data"]);
-      printf ("listix loaded\n--\n");
+      TRACE (("listix loaded"));
 
       return true;
    }

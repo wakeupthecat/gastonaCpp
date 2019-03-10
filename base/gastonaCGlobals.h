@@ -20,6 +20,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef GASTONACGLOBALS_HEADER
 #define GASTONACGLOBALS_HEADER
 
+#include "traceMacro.h"
+
 /**
 */
 struct gastonaCGlobals

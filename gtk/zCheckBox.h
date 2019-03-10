@@ -52,7 +52,7 @@ public:
    {
       if (mappedMsg == MSK_UPDATE_DATA)
       {
-         printf ("mira var[%s] val[%s]\n", params.size () > 1 ? params[0].c_str ():"?", params.size () > 1 ? params[1].c_str ():"?");
+         TRACE2 (("mira var[%s] val[%s]\n", params.size () > 1 ? params[0].c_str ():"?", params.size () > 1 ? params[1].c_str ():"?"));
          setVariablesFromArray (params);
          updateData ();
          return true;
@@ -77,7 +77,7 @@ public:
    void on_click ()
    {
       bool sel = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(hwnd));
-      
+
       Eva & edata = getAttribute ("selected", true);
       edata.setValue (sel ? "1": "0");
 

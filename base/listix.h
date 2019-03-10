@@ -86,7 +86,7 @@ public:
       {
          if (strncmp (forms[ii].getName ().c_str (), "-- ", 3) == 0)
          {
-            cout << "listix mensaka subs [" << forms[ii].getName ().substr (3) << "]" << endl;
+            TRACE (("listix mensaka subscibe [%s]", forms[ii].getName ().substr (3).c_str ()));
             Mensaka::subscribeToMessage (forms[ii].getName ().substr (3), ii, this);
          }
       }
@@ -95,11 +95,10 @@ public:
 
    void run (const char * format)
    {
-      cout << "listix run format [" << format << "]" << endl;
-
       EvaUnit & forms = safeFormats ();
       Eva & eva = forms[format];
-      cout << "listix eva rows " << eva.rows () << endl;
+      
+      TRACE (("listix run format [%s] rows %d", format, eva.rows () ));
       if (false == EvaUnit::isNILEva (eva))
          callLua (eva);
    }
@@ -110,7 +109,7 @@ public:
 
       if (EvaUnit::isNILEva (luascript)) return;
 
-      cout << "callLua with script of " << luascript.rows () << " lines" << endl;
+      TRACE (("callLua with script of %d lines", luascript.rows () ));
 
       string txtscript;
       for (int ii = 0; ii < luascript.rows (); ii ++)
@@ -129,7 +128,7 @@ public:
       }
       catch (exception e)
       {
-         cout << "Exception executing Lua script: " << e.what () << endl;
+         TRACE_ERR (("Exception executing Lua script: %s", e.what () ));
       }
    }
 

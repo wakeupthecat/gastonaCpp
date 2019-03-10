@@ -244,7 +244,7 @@ public:
       FILE * fitx = fopen (fn.c_str (), "w+");
       if (fitx == 0)
       {
-         printf ("ERROR: EvaFile::Save, the file [%s] couln't be opened for write!", fn.c_str ());
+         TRACE_ERR (("EvaFile::Save, the file [%s] couln't be opened for write!", fn.c_str ()));
          return false;
       }
 
@@ -252,7 +252,7 @@ public:
          if (nameRequired (unitCatalog[ii], units2Save))
             writeEvaUnitOnFile (fitx, getUnit (unitCatalog[ii]));
 
-      fprintf (fitx, "\n#**FIN#");
+      fprintf (fitx, "\n#**FI#\n");
       fclose (fitx);
       return true;
    }

@@ -77,7 +77,7 @@ public:
    {
       if (mappedMsg == MSK_UPDATE_DATA)
       {
-         printf ("mira var[%s] val[%s]\n", params.size () > 1 ? params[0].c_str ():"?", params.size () > 1 ? params[1].c_str ():"?");
+         TRACE2 (("mira var[%s] val[%s]\n", params.size () > 1 ? params[0].c_str ():"?", params.size () > 1 ? params[1].c_str ():"?"));
          setVariablesFromArray (params);
          updateData ();
          return true;
@@ -122,11 +122,11 @@ public:
       //root node
       HTREEITEM root = insertTo(NULL, TEXT("root"), 0); // title or whatever
       elevos.push_back (root);
-      printf ("Cargamos arbols de %d nods\n", aserro.eva.rows ());
+      TRACE2 (("Cargamos arbols de %d nods\n", aserro.eva.rows ()));
 
       for (int rr = 0; rr < aserro.eva.rows (); rr ++)
       {
-         printf ("  lina rr %d cols %d\n", rr, aserro.eva[rr].cols ());
+         TRACE2 (("  lina rr %d cols %d\n", rr, aserro.eva[rr].cols ()));
          int cc = 0;
          while (++cc < aserro.eva[rr].cols ())
          {
@@ -176,7 +176,7 @@ public:
                        cc >= aserro.eva[rr+1].cols () ||
                        aserro.eva[rr+1][cc].length () > 0))
                {
-                   printf ("  acorto at cc %d \"%s\"\n", (cc+1), aserro.eva[rr][1+cc].c_str ());
+                   TRACE2 (("  acorto at cc %d \"%s\"\n", (cc+1), aserro.eva[rr][1+cc].c_str ()));
                    nodostr += separador;
                    nodostr += aserro.eva[rr][++cc];
                }
@@ -192,7 +192,7 @@ public:
             }
 
             elevos.push_back (insertTo(parent, TEXT(nodostr.c_str ()), 0));
-            printf ("Insert node \"%s\" at depth %d\n",  nodostr.c_str (), elevos.size ());
+            TRACE2 (("Insert node \"%s\" at depth %d\n",  nodostr.c_str (), elevos.size ()));
          }
       }
    }

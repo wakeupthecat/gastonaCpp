@@ -89,7 +89,7 @@ public:
 
    static void mergeDataAndControlUnit (EvaUnit & euData)
    {
-      printf ("TODO: implement mergeDataAndControlUnit!");
+      TRACE_ERR (("TODO: implement mergeDataAndControlUnit!"));
    }
 
    static void setDataAndControlUnit (EvaUnit & euData)
