@@ -244,6 +244,10 @@ public:
    //
    void setLayouts (EvaUnit & allLayouts);
 
+   // Collect all widget names
+   //
+   vector<string> getAllWidgetNames ();
+
    // Adds a winApi widget to be laid out by EvaLayoutManager
    //
    void addWidget (const zWidgetLayable & widlay);

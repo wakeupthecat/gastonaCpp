@@ -217,7 +217,6 @@ public:
       /// SendEditor(SCI_STYLESETEOLFILLED, SCE_HJA_STRINGEOL, 1);
    }
 
-
    bool takePacket (int mappedMsg, EvaUnit & pk, const vector<string> & params)
    {
       if (mappedMsg == UPDATE_DATA)

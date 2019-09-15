@@ -43,6 +43,50 @@ EvaLayoutManager::EvaLayoutManager ():
 {
 }
 
+
+vector<string> EvaLayoutManager::getAllWidgetNames ()
+{
+   // get a list of all widget names present in all layouts
+   //
+   vector<string> widlist;
+
+   for (int ee = 0; ee < euLayoutInfo.size (); ee ++)
+   {
+      Eva elay = euLayoutInfo[ee];
+
+      if (startsWith (elay.getName (), "layout of "))
+      {
+         if (startsWith (elay[0][0], "EVA") || startsWith (elay[0][0], "Eva"))
+         {
+            // collect all widget names from EVALAYOUT type
+            //
+            for (int rr = 2; rr < elay.rows (); rr ++)
+            {
+               for (int cc = 1; cc < elay[rr].cols (); cc ++)
+               {
+                  string & winam = elay[rr][cc];
+
+                  if (winam.length () > 1 && 
+                      !startsWith (winam, "-") &&     // exclude expansion signs 
+                      !startsWith (winam, "+") &&     // exclude expansion signs 
+                      getLayoutIndex (winam) == -1)   // exclude layouts
+                  {
+                     TRACE (("zwidget <%s>", winam.c_str ()));
+                     widlist.push_back (winam);
+                  }
+               }
+            }
+         }
+         else
+         {
+            // print ("error: Layout type %s not supported!", elay[0][0]);
+         }
+      }
+   }
+   return widlist;
+}
+
+
 void EvaLayoutManager::setLayouts (EvaUnit & allLayouts)
 {
    euLayoutInfo = allLayouts;
@@ -55,7 +99,6 @@ void EvaLayoutManager::setLayouts (EvaUnit & allLayouts)
    {
       string PREF = "layout of ";
       string evaname = euLayoutInfo[ii].getName ();
-      int carcas = evaname.find (PREF);
       if (evaname.find (PREF) == 0)
       {
          string layname = evaname.substr (PREF.length ());

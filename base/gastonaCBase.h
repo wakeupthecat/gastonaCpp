@@ -112,47 +112,6 @@ public:
       return frameWindow ();
    }
 
-   bool startsWith (const string & source, const string & comp)
-   {
-      return source.find (comp) == 0;
-   }
-
-   vector<string> getAllWidgetNames (EvaUnit & ujavaj)
-   {
-      // get a list of all widget names present in all layouts
-      //
-      vector<string> widlist;
-
-      for (int ee = 0; ee < ujavaj.size (); ee ++)
-      {
-         Eva elay = ujavaj[ee];
-
-         if (startsWith (elay.getName (), "layout of "))
-         {
-            if (startsWith (elay[0][0], "EVA") || startsWith (elay[0][0], "Eva"))
-            {
-               // collect all widget names from EVALAYOUT type
-               //
-               for (int rr = 2; rr < elay.rows (); rr ++)
-               {
-                  for (int cc = 1; cc < elay[rr].cols (); cc ++)
-                  {
-                     string & winam = elay[rr][cc];
-
-                     if (winam.length () > 1 && !startsWith (winam, "-") && !startsWith (winam, "+"))
-                        widlist.push_back (winam);
-                  }
-               }
-            }
-            else
-            {
-               TRACE_ERR (("error: Layout type %s not supported!", elay[0][0].c_str ()));
-            }
-         }
-      }
-      return widlist;
-   }
-
    void loadFrames ()
    {
       if (EvaFile::isNILEvaUnit (wastEvafile["javaj"]))

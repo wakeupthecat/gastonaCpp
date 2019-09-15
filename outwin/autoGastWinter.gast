@@ -1,6 +1,6 @@
 #javaj#
 
-   <frames>  main, gasWinter.gast, 500, 350
+   <frames>  main, gasWinter.gast, 700, 550
 
    <layout of main>
       EVALAYOUT, 10, 10, 5, 5
@@ -9,15 +9,16 @@
           , lLabello, tAmbrosia
        X  , iRogelia, +
        X  ,   +     , mTexto
-      200 , partit, -
+      200 , layBaix, -
 
 
-   <layout of partit>
+   <layout of layBaix>
          EVA, 4, 4, 3, 3
 
           ,  X       , X
           , lArboreda, lEditor Scintilla
        X  ,  aSalo, zIntollos
+          , cCepollo, -
 
 
 #data#

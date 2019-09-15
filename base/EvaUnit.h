@@ -61,6 +61,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
          //
          Eva & ptEva1 = eunit.getEva("unaEva");
          Eva & ptEva2 = eunit["unaEva"];
+         
+         ptEva1.setData ("initial line");
+         ptEva2.setData ("second line", 1, 0);
+         ptEva2.setData ("second column", 1, 1);
 
          // deserializing (to save into a file or for debug)
          cout << eunit.toString ().c_str ();

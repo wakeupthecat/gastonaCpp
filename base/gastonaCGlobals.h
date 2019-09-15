@@ -20,7 +20,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef GASTONACGLOBALS_HEADER
 #define GASTONACGLOBALS_HEADER
 
+#include <string>
 #include "traceMacro.h"
+using namespace std;
 
 /**
 */
@@ -33,5 +35,11 @@ struct gastonaCGlobals
    static const char * msgFRAMES_VISIBLE ()  {  return "javaj frames_visible";      }
 
 };
+
+
+bool startsWith (const string & source, const string & comp)
+{
+   return source.find (comp) == 0;
+}
 
 #endif  // _HEADER_H

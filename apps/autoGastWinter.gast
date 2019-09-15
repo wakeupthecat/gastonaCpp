@@ -1,0 +1,16 @@
+#javaj#
+
+   <frames>  main, sciVisa, 500, 350
+
+   <layout of main>
+      EVALAYOUT, 10, 10, 5, 5
+       zzz,   200   ,   X
+       X  , iFiles , zScintillo
+
+#data#
+
+   <iFiles>
+      name
+      autoGastWinter.gast
+      sciVisa\app_SciVisa.cpp
+      sciVisa\product_app.cpp

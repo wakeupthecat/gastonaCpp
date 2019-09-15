@@ -125,7 +125,7 @@ public:
       //
       // All widgets are instanciated and set to the manager
       //
-      vector<string> wnames = getAllWidgetNames (ujavaj);
+      vector<string> wnames = layManager.getAllWidgetNames ();
 
       for (int ww = 0; ww < wnames.size (); ww ++)
       {
