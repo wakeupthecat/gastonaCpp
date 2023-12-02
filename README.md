@@ -5,7 +5,19 @@
 Gastona is a scripting language to achieve Rapid Application Development (RAD). The original project is a java implementation for both desktop and Android applications that also can be found
 in github in https://github.com/wakeupthecat/gastona.
 
-This project is for the C++ version of gastona which is in the very beginning stage (it has been  started in July 2018).
+## Archived at status "proof of concept"
+
+This project was started with the intention of be developed but it will be archived for following reasons
+
+The development in C++ is of course possible but it required too much developing effort, specially for the GUI elements 
+native widgets in windows is hard and even if Gtk library is used (actually done in the project) the development is not trivial.
+
+Furthermore there is another gastona port much more promising than in C++ and it is in Python language, in particular 
+basing the widgets in the powerful package wxPython. Although wxPython is based on wxWidgets which is actually also
+available in C++, the extra bonus of doing gastona in Python is the vast world of Python packages and of course being able to 
+use Python as script language within gastona scripts and the ease of extending gastona itself in Python in comparison to Java or C++.
+
+Very soon a gastonaPy project in github will be published
 
 ## The C++ vs the java version
 
